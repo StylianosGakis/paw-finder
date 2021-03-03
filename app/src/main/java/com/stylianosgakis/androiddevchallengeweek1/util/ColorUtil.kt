@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.androiddevchallengeweek1.ui
+package com.stylianosgakis.androiddevchallengeweek1.util
 
-sealed class Screen(
-    val route: String,
-) {
-    object AnimalsScreen : Screen("Animals")
+import android.content.Context
+import android.util.TypedValue
+import androidx.annotation.AttrRes
 
-    object DetailsScreen : Screen("Details")
+fun Context.themeColor(@AttrRes attrRes: Int): Int {
+    val typedValue = TypedValue()
+    theme.resolveAttribute(attrRes, typedValue, true)
+    return typedValue.data
 }

@@ -16,37 +16,65 @@ android {
 
     defaultConfig {
         applicationId "com.stylianosgakis.androiddevchallengeweek1"
-        minSdkVersion 28
+        minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        //buildConfigField("String", "UNSPLASH_ACCESS_KEY", apikeyProperties['UNSPLASH_ACCESS_KEY'])
         buildConfigField("String", "PET_FINDER_CLIENT_ID", apikeyProperties['PET_FINDER_CLIENT_ID'])
         buildConfigField("String", "PET_FINDER_CLIENT_SECRET", apikeyProperties['PET_FINDER_CLIENT_SECRET'])
     }
 
+    signingConfigs {
+        // We use a bundled debug keystore, to allow debug builds from CI to be upgradable
+        debug {
+            storeFile rootProject.file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        compose true
+
+        // Disable unused AGP features
+        aidl false
+        renderScript false
+        resValues false
+        shaders false
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-        useIR = true
-    }
-    buildFeatures {
-        compose true
-    }
+
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
+    }
+
+    packagingOptions {
+        // Multiple dependency bring these files in. Exclude them to enable
+        // our test APK to build (has no effect on our AARs)
+        excludes += "/META-INF/AL2.0"
+        excludes += "/META-INF/LGPL2.1"
     }
 }
 

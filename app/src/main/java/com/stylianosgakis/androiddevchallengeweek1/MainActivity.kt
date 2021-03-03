@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.stylianosgakis.androiddevchallengeweek1
 
 import android.app.Activity
@@ -15,9 +30,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.stylianosgakis.androiddevchallengeweek1.theme.AppTheme
-import com.stylianosgakis.androiddevchallengeweek1.theme.navigationBarAndroidColor
-import com.stylianosgakis.androiddevchallengeweek1.theme.statusBarAndroidColor
 import com.stylianosgakis.androiddevchallengeweek1.ui.AppScreen
+import com.stylianosgakis.androiddevchallengeweek1.util.themeColor
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
 
@@ -47,9 +61,10 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun EdgeToEdgeContent(content: @Composable () -> Unit) {
     val view = LocalView.current
-    val window = (LocalContext.current as Activity).window
-    window.statusBarColor = statusBarAndroidColor.toArgb()
-    window.navigationBarColor = navigationBarAndroidColor.toArgb()
+    val context = LocalContext.current
+    val window = (context as Activity).window
+    window.statusBarColor = context.themeColor(R.attr.colorPrimary)
+    window.navigationBarColor = context.themeColor(R.attr.colorPrimary)
     val insetsController = remember(view, window) {
         WindowCompat.getInsetsController(window, view)
     }

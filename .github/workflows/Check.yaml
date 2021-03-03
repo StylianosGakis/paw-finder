@@ -13,6 +13,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        
+      - name: Configure apikey.properties file
+        env:
+          CLIENT_ID: ${{ secrets.PET_FINDER_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.PET_FINDER_CLIENT_SECRET }}
+        run: 'printf "%b\n%b\n" "PET_FINDER_CLIENT_ID=\"$CLIENT_ID\"" "PET_FINDER_CLIENT_SECRET=\"$CLIENT_SECRET\"" > apikey.properties'
 
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties        
@@ -49,7 +55,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      
+
+      - name: Configure apikey.properties file
+        env:
+          CLIENT_ID: ${{ secrets.PET_FINDER_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.PET_FINDER_CLIENT_SECRET }}
+        run: 'printf "%b\n%b\n" "PET_FINDER_CLIENT_ID=\"$CLIENT_ID\"" "PET_FINDER_CLIENT_SECRET=\"$CLIENT_SECRET\"" > apikey.properties'
+
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
