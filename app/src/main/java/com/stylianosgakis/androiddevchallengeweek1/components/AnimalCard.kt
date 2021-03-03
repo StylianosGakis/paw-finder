@@ -1,0 +1,151 @@
+package com.stylianosgakis.androiddevchallengeweek1.components
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
+import com.stylianosgakis.androiddevchallengeweek1.theme.animalCardBackgroundColor
+import dev.chrisbanes.accompanist.coil.CoilImage
+
+@Composable
+fun AnimalCard(
+    cardIndex: Int,
+    animal: Animal,
+    goToDetailsScreen: () -> Unit,
+) {
+    val photoPosition = when (cardIndex % 2 == 0) {
+        true -> PhotoPosition.Left
+        false -> PhotoPosition.Right
+    }
+    AnimalCard(
+        photoPosition = photoPosition,
+        photo = {
+            CoilImage(
+                data = animal.photos.first().medium,
+                contentDescription = "Animal photo",
+                contentScale = ContentScale.FillBounds,
+                loading = { LoadingImage() },
+                error = { LoadingImage() },
+                modifier = Modifier
+                    .size(width = 150.dp, height = 200.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .clickable { goToDetailsScreen() }
+            )
+        },
+        animalDetails = { clipShape ->
+            Surface(
+                shape = clipShape,
+                color = animalCardBackgroundColor,
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically)
+                    .clip(clipShape)
+                    .clickable { goToDetailsScreen() }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        SingleLineText(
+                            text = animal.simpleOneWordCapitalizedName,
+                            style = MaterialTheme.typography.h6,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        GenderChip(animal.gender)
+                    }
+                    val species = animal.species
+                    val primaryBreed = animal.breeds.primary
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+                        SingleLineText(
+                            text = species,
+                            style = MaterialTheme.typography.body1,
+                        )
+                    }
+                    if (species != primaryBreed) {
+                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                            SingleLineText(
+                                text = primaryBreed,
+                                style = MaterialTheme.typography.body1,
+                            )
+                        }
+                    }
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
+                        SingleLineText(
+                            text = animal.age,
+                            style = MaterialTheme.typography.body2,
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SingleLineText(
+                        text = animal.contact.address.run {
+                            "$city, $state"
+                        },
+                        style = MaterialTheme.typography.subtitle2,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun AnimalCard(
+    photoPosition: PhotoPosition,
+    photo: @Composable RowScope.() -> Unit,
+    animalDetails: @Composable (RowScope.(clipShape: Shape) -> Unit),
+) {
+    when (photoPosition) {
+        PhotoPosition.Left -> {
+            val clipShape = MaterialTheme.shapes.small.copy(
+                topStart = CornerSize(0.dp),
+                bottomEnd = CornerSize(0.dp),
+            )
+            Row {
+                photo()
+                animalDetails(clipShape)
+            }
+        }
+        PhotoPosition.Right -> {
+            val clipShape = MaterialTheme.shapes.small.copy(
+                topEnd = CornerSize(0.dp),
+                bottomStart = CornerSize(0.dp),
+            )
+            Row {
+                animalDetails(clipShape)
+                photo()
+            }
+        }
+    }
+}
+
+private enum class PhotoPosition {
+    Left, Right
+}

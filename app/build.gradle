@@ -1,81 +1,111 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_version"
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
+
+def apikeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId "com.example.androiddevchallenge"
-        minSdkVersion 23
+        applicationId "com.stylianosgakis.androiddevchallengeweek1"
+        minSdkVersion 28
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
 
-    signingConfigs {
-        // We use a bundled debug keystore, to allow debug builds from CI to be upgradable
-        debug {
-            storeFile rootProject.file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
+        //buildConfigField("String", "UNSPLASH_ACCESS_KEY", apikeyProperties['UNSPLASH_ACCESS_KEY'])
+        buildConfigField("String", "PET_FINDER_CLIENT_ID", apikeyProperties['PET_FINDER_CLIENT_ID'])
+        buildConfigField("String", "PET_FINDER_CLIENT_SECRET", apikeyProperties['PET_FINDER_CLIENT_SECRET'])
     }
 
     buildTypes {
-        debug {
-            signingConfig signingConfigs.debug
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    kotlinOptions {
+        jvmTarget = '1.8'
+        useIR = true
+    }
     buildFeatures {
         compose true
-
-        // Disable unused AGP features
-        buildConfig false
-        aidl false
-        renderScript false
-        resValues false
-        shaders false
     }
-
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-    }
-
-    packagingOptions {
-        // Multiple dependency bring these files in. Exclude them to enable
-        // our test APK to build (has no effect on our AARs)
-        excludes += "/META-INF/AL2.0"
-        excludes += "/META-INF/LGPL2.1"
     }
 }
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.activity:activity-compose:1.3.0-alpha03'
     implementation 'com.google.android.material:material:1.3.0'
-    implementation "androidx.activity:activity-compose:1.3.0-alpha03"
-    implementation "androidx.compose.ui:ui:$compose_version"
+
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha02"
+
+    // Compose
+    implementation "androidx.compose.foundation:foundation:$compose_version"
+    implementation "androidx.compose.foundation:foundation-layout:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "androidx.compose.runtime:runtime:$compose_version"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
+    implementation "androidx.compose.ui:ui-util:$compose_version"
+
+    // Accompanist
+    def accompanist_version = "0.6.0"
+    implementation "dev.chrisbanes.accompanist:accompanist-coil:$accompanist_version"
+    implementation "dev.chrisbanes.accompanist:accompanist-insets:$accompanist_version"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-compose:1.0.0-alpha08"
+
+    // Logging
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // DI
+    implementation "androidx.hilt:hilt-navigation-fragment:1.0.0-alpha03"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$androidx_hilt_version"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version" // mine ??
+    kapt "androidx.hilt:hilt-compiler:$androidx_hilt_version"
+
+    // Api
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.4.0"
+    implementation "com.squareup.okhttp3:okhttp:4.9.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-compose:1.0.0-alpha08"
+
+    // Datastore Preferences
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha07"
+
+    // Compose preview
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     testImplementation 'junit:junit:4.13.2'
-
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
