@@ -15,7 +15,6 @@
  */
 package com.stylianosgakis.androiddevchallengeweek1
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -24,16 +23,16 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.stylianosgakis.androiddevchallengeweek1.theme.AppTheme
 import com.stylianosgakis.androiddevchallengeweek1.ui.AppScreen
-import com.stylianosgakis.androiddevchallengeweek1.util.themeColor
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @ExperimentalMaterialApi
 @AndroidEntryPoint
@@ -46,11 +45,13 @@ class MainActivity : AppCompatActivity() {
         setContent {
             AppTheme {
                 EdgeToEdgeContent {
-                    Surface(
-                        color = MaterialTheme.colors.background,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        AppScreen()
+                    ColoredSystemBarsContent {
+                        Surface(
+                            color = MaterialTheme.colors.background,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            AppScreen()
+                        }
                     }
                 }
             }
@@ -60,18 +61,22 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun EdgeToEdgeContent(content: @Composable () -> Unit) {
-    val view = LocalView.current
-    val context = LocalContext.current
-    val window = (context as Activity).window
-    window.statusBarColor = context.themeColor(R.attr.colorPrimary)
-    window.navigationBarColor = context.themeColor(R.attr.colorPrimary)
-    val insetsController = remember(view, window) {
-        WindowCompat.getInsetsController(window, view)
-    }
-    val isLightTheme = MaterialTheme.colors.isLight
-    insetsController?.run {
-        isAppearanceLightNavigationBars = isLightTheme
-        isAppearanceLightStatusBars = isLightTheme
-    }
     ProvideWindowInsets(content = content)
+}
+
+@Composable
+fun ColoredSystemBarsContent(content: @Composable () -> Unit) {
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = MaterialTheme.colors.isLight
+    val primaryColor = MaterialTheme.colors.primary
+    SideEffect {
+        Timber.d("Side effect ran")
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent,
+            darkIcons = useDarkIcons
+        )
+        systemUiController.setNavigationBarColor(primaryColor)
+        systemUiController.setStatusBarColor(primaryColor)
+    }
+    content()
 }

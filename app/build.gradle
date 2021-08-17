@@ -100,7 +100,7 @@ dependencies {
 
     // Insets
     def accompanist_version = "0.16.1"
-    implementation "com.google.accompanist:systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
 
     // Image loading

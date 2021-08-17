@@ -16,10 +16,8 @@
 package com.stylianosgakis.androiddevchallengeweek1.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -37,9 +35,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsPadding
 import com.stylianosgakis.androiddevchallengeweek1.R
+import com.stylianosgakis.androiddevchallengeweek1.theme.AppTheme
 import com.stylianosgakis.androiddevchallengeweek1.theme.MyHappyEnding
 
 @Composable
@@ -50,42 +50,47 @@ fun FindMyPetAppBar() {
     ) {
         TopAppBar(
             title = {
-                Column(
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(
+                        space = (-4).dp,
+                        alignment = Alignment.CenterHorizontally
+                    ),
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
-                ) { // TODO Check if this is the only way to align the row to the center?
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy((-4).dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.TwoTone.Pets,
+                        contentDescription = "Paw icon",
+                        tint = MaterialTheme.colors.secondaryVariant,
                         modifier = Modifier
-                            .wrapContentWidth()
-                            .align(Alignment.CenterHorizontally)
-                    ) {
-                        Icon(
-                            imageVector = Icons.TwoTone.Pets,
-                            contentDescription = "Paw icon",
-                            tint = MaterialTheme.colors.secondaryVariant,
-                            modifier = Modifier
-                                .scale(1.25f)
-                                .graphicsLayer(
-                                    translationX = -5f,
-                                    rotationZ = -20f
-                                )
-                        )
-                        Text(
-                            text = stringResource(id = R.string.app_name),
-                            textAlign = TextAlign.Center,
-                            fontFamily = MyHappyEnding,
-                            fontStyle = FontStyle.Italic,
-                            color = MaterialTheme.colors.secondaryVariant,
-                            style = MaterialTheme.typography.h3,
-                        )
-                    }
+                            .scale(1.25f)
+                            .graphicsLayer(
+                                translationX = -5f,
+                                rotationZ = -20f
+                            )
+                    )
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        textAlign = TextAlign.Center,
+                        fontFamily = MyHappyEnding,
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colors.secondaryVariant,
+                        style = MaterialTheme.typography.h3,
+                    )
                 }
             },
             backgroundColor = Color.Transparent,
             contentColor = MaterialTheme.colors.onSurface,
             elevation = 0.dp,
-            modifier = Modifier.statusBarsPadding(),
+            modifier = Modifier.statusBarsPadding()
         )
+    }
+}
+
+@Preview
+@Composable
+fun FindMyPetAppBarPreview() {
+    AppTheme {
+        FindMyPetAppBar()
     }
 }

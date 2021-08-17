@@ -65,9 +65,7 @@ fun AnimalsScreen(
 ) {
     val lazyListState = rememberLazyListState()
     val isScrollingForwards by lazyListState.isScrollingForwardsAsState()
-
     val scaffoldState = rememberScaffoldState()
-
     val scope = rememberCoroutineScope()
 
     Scaffold(
