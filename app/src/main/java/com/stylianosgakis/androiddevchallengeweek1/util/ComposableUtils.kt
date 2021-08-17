@@ -28,9 +28,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import dev.chrisbanes.accompanist.insets.LocalWindowInsets
 
 private class ScrollInfo(
     var index: Int = 0,
@@ -52,15 +49,6 @@ fun LazyListState.isScrollingForwardsAsState(): State<Boolean> {
             oldScrollInfo.index = index
             return@derivedStateOf isForward
         }
-    }
-}
-
-@Composable
-fun systemNavigationBarHeightDpAsState(): State<Dp> {
-    val density = LocalDensity.current
-    val insets = LocalWindowInsets.current.navigationBars
-    return remember(density, insets) {
-        derivedStateOf { with(density) { insets.bottom.toDp() } }
     }
 }
 

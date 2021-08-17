@@ -35,9 +35,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsPadding
 import com.stylianosgakis.androiddevchallengeweek1.components.BottomSheetDragHandler
 import com.stylianosgakis.androiddevchallengeweek1.data.AnimalType
-import dev.chrisbanes.accompanist.insets.navigationBarsPadding
 
 @Composable
 fun AnimalTypePickerSheet(

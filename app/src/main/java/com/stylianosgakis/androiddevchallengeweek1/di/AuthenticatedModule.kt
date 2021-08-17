@@ -18,7 +18,6 @@ package com.stylianosgakis.androiddevchallengeweek1.di
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.stylianosgakis.androiddevchallengeweek1.api.PetFinderApi
 import com.stylianosgakis.androiddevchallengeweek1.api.authenticator.ExistingTokenAppendingInterceptor
-import com.stylianosgakis.androiddevchallengeweek1.data.PetFinderRepository
 import com.stylianosgakis.androiddevchallengeweek1.session.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -86,11 +85,4 @@ object AuthenticatedModule {
         @Named(RETROFIT) retrofit: Retrofit,
     ): PetFinderApi =
         retrofit.create<PetFinderApi>()
-
-    @Singleton
-    @Provides
-    fun providePetFinderRepository(
-        petFinderApi: PetFinderApi,
-    ): PetFinderRepository =
-        PetFinderRepository(petFinderApi)
 }

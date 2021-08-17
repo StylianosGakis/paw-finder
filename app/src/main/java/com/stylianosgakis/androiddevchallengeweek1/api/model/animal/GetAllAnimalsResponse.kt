@@ -19,9 +19,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PetFinderAnimalsResponse(
+data class GetAllAnimalsResponse(
     val animals: List<Animal>,
     val pagination: Pagination,
+)
+
+@Serializable
+data class GetOneAnimalsResponse(
+    val animal: Animal,
 )
 
 @Serializable

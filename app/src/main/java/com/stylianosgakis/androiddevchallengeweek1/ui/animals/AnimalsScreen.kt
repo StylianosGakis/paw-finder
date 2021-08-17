@@ -15,12 +15,6 @@
  */
 package com.stylianosgakis.androiddevchallengeweek1.ui.animals
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.Transition
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -36,8 +30,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.FilterAlt
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -49,28 +41,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsPadding
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
 import com.stylianosgakis.androiddevchallengeweek1.components.AnimalCard
-import com.stylianosgakis.androiddevchallengeweek1.components.ExtendedFab
 import com.stylianosgakis.androiddevchallengeweek1.data.AnimalType
+import com.stylianosgakis.androiddevchallengeweek1.theme.AppTheme
 import com.stylianosgakis.androiddevchallengeweek1.theme.bottomSheetShape
 import com.stylianosgakis.androiddevchallengeweek1.ui.FindMyPetAppBar
 import com.stylianosgakis.androiddevchallengeweek1.util.isScrollingForwardsAsState
-import dev.chrisbanes.accompanist.insets.navigationBarsPadding
+import com.stylianosgakis.androiddevchallengeweek1.util.previewAnimal
 import kotlinx.coroutines.launch
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AnimalsScreen(
     animalList: List<Animal>,
     selectedAnimalType: AnimalType,
     setSelectedAnimalType: (AnimalType) -> Unit,
-    goToDetailsScreen: (Animal) -> Unit,
+    goToDetailsScreen: (id: Int) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
     val isScrollingForwards by lazyListState.isScrollingForwardsAsState()
@@ -83,8 +74,7 @@ fun AnimalsScreen(
         topBar = { FindMyPetAppBar() },
         scaffoldState = scaffoldState,
     ) { paddingValues ->
-        val modalSheetState =
-            rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+        val modalSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         ModalBottomSheetLayout(
             sheetState = modalSheetState,
             sheetContent = {
@@ -136,14 +126,13 @@ fun AnimalsScreen(
                         AnimalCard(
                             cardIndex = index,
                             animal = animal,
-                            goToDetailsScreen = { goToDetailsScreen(animal) },
+                            goToDetailsScreen = { goToDetailsScreen(animal.id) },
                         )
                     }
                     item {
                         Spacer(
                             modifier = Modifier
                                 .height(fabHeight.dp) // TODO make the space follow the fab size properly
-                                .border(width = 1.dp, color = Color.Red)
                         )
                     }
                 }
@@ -168,44 +157,18 @@ fun AnimalsScreen(
     }
 }
 
+@Preview
 @Composable
-private fun FilterAnimalTypeButton(
-    onClick: () -> Unit,
-    visible: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    val transition: Transition<Boolean> = updateTransition(targetState = visible)
-
-    val alpha by transition.animateFloat(
-        transitionSpec = { tween(durationMillis = 280, easing = FastOutSlowInEasing) },
-    ) { isVisible ->
-        when (isVisible) {
-            true -> 1f
-            false -> 0f
-        }
-    }
-
-    val translationY by transition.animateFloat(
-        transitionSpec = { tween(durationMillis = 280, easing = FastOutSlowInEasing) }
-    ) { isVisible ->
-        when (isVisible) {
-            true -> 0f
-            false -> with(LocalDensity.current) { 40.dp.toPx() }
-        }
-    }
-
-    Box(
-        modifier = modifier
-            .graphicsLayer(
-                clip = false,
-                alpha = alpha,
-                translationY = translationY,
-            )
-    ) {
-        ExtendedFab(
-            onClick = onClick,
-            text = "CHANGE ANIMAL TYPE",
-            imageVector = Icons.TwoTone.FilterAlt
+fun AnimalsScreenPreview() {
+    val animal = previewAnimal
+    AppTheme {
+        AnimalsScreen(
+            animalList = List(6) {
+                return@List animal.copy(id = animal.id + it)
+            },
+            selectedAnimalType = AnimalType.valueOf(animal.type),
+            setSelectedAnimalType = {},
+            goToDetailsScreen = {}
         )
     }
 }

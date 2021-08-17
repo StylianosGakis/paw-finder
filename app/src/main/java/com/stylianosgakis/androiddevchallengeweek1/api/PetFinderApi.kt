@@ -15,8 +15,10 @@
  */
 package com.stylianosgakis.androiddevchallengeweek1.api
 
-import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.PetFinderAnimalsResponse
+import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.GetAllAnimalsResponse
+import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.GetOneAnimalsResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PetFinderApi {
@@ -24,5 +26,10 @@ interface PetFinderApi {
     suspend fun searchAnimals(
         @Query("type") animalType: String,
         @Query("page") page: Int,
-    ): PetFinderAnimalsResponse
+    ): GetAllAnimalsResponse
+
+    @GET("animals/{id}")
+    suspend fun searchAnimal(
+        @Path("id") id: Int
+    ): GetOneAnimalsResponse
 }

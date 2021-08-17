@@ -18,7 +18,9 @@ package com.stylianosgakis.androiddevchallengeweek1.ui
 sealed class Screen(
     val route: String,
 ) {
-    object AnimalsScreen : Screen("Animals")
+    object AnimalsScreen : Screen("animals")
 
-    object DetailsScreen : Screen("Details")
+    object DetailsScreen : Screen("details/{id}") {
+        fun createRoute(id: Int): String = "details/$id"
+    }
 }

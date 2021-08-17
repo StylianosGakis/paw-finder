@@ -51,6 +51,7 @@ class AnimalsScreenViewModel @Inject constructor(
         get() = _animalType.asStateFlow()
 
     init {
+        loadSelectedOption()
         _animalType.onEach {
             loadSelectedOption()
         }.launchIn(viewModelScope)
@@ -62,9 +63,9 @@ class AnimalsScreenViewModel @Inject constructor(
     }
 
     private fun loadSelectedOption() {
-        loadSelectedOptionsJob?.cancel() // TODO check if this is the correct way to stop the old query if I press multiple things before the previous one finishes
+        loadSelectedOptionsJob?.cancel()
         loadSelectedOptionsJob = viewModelScope.launch(defaultDispatcher) {
-            // TODO Add page handling. For now just load some to be able to scroll freely
+            // TODO Add page handling. For now just load some pages to be able to scroll freely
             val getAnimalAsyncCalls = List(4) { index ->
                 async {
                     petFinderRepository.getAnimals(

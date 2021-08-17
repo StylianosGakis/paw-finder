@@ -15,12 +15,9 @@
  */
 package com.stylianosgakis.androiddevchallengeweek1.api.model.animal
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class Attributes(
     val declawed: Boolean?,
@@ -32,4 +29,4 @@ data class Attributes(
     val spayedNeutered: Boolean,
     @SerialName("special_needs")
     val specialNeeds: Boolean,
-) : Parcelable
+)

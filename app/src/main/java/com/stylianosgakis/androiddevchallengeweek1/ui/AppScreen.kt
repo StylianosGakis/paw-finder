@@ -17,18 +17,20 @@ package com.stylianosgakis.androiddevchallengeweek1.ui
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigate
+import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
-import com.stylianosgakis.androiddevchallengeweek1.data.AnimalType
 import com.stylianosgakis.androiddevchallengeweek1.ui.animaldetails.DetailsScreen
+import com.stylianosgakis.androiddevchallengeweek1.ui.animaldetails.DetailsScreenViewModel
 import com.stylianosgakis.androiddevchallengeweek1.ui.animals.AnimalsScreen
 import com.stylianosgakis.androiddevchallengeweek1.ui.animals.AnimalsScreenViewModel
 import com.stylianosgakis.androiddevchallengeweek1.util.viewModel
@@ -41,14 +43,14 @@ fun AppScreen() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.AnimalsScreen.route
+        startDestination = Screen.AnimalsScreen.route,
     ) {
         composable(Screen.AnimalsScreen.route) { navBackStackEntry ->
             val viewModel: AnimalsScreenViewModel = navBackStackEntry.viewModel()
 
             val scope = rememberCoroutineScope()
-            val animalList: List<Animal> by viewModel.animalList.collectAsState(scope.coroutineContext)
-            val selectedAnimalType: AnimalType by viewModel.animalType.collectAsState(scope.coroutineContext)
+            val animalList by viewModel.animalList.collectAsState(scope.coroutineContext)
+            val selectedAnimalType by viewModel.animalType.collectAsState(scope.coroutineContext)
 
             AnimalsScreen(
                 animalList = animalList,
@@ -56,34 +58,39 @@ fun AppScreen() {
                 setSelectedAnimalType = { animalType ->
                     viewModel.setAnimalType(animalType)
                 },
-                goToDetailsScreen = { animal ->
-                    actions.goToDetailsScreen(animal)
+                goToDetailsScreen = { animalId: Int ->
+                    actions.goToDetailsScreen(animalId)
                 },
             )
         }
         composable(
             route = Screen.DetailsScreen.route,
-        ) {
-            val animal: Animal = requireNotNull(
-                navController.previousBackStackEntry?.arguments?.getParcelable(Animal::class.simpleName)
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.IntType
+                }
             )
+        ) { navBackStackEntry ->
+            val viewModel: DetailsScreenViewModel = navBackStackEntry.viewModel()
+            val id = remember { navBackStackEntry.arguments!!.getInt("id") }
 
-            DetailsScreen(
-                animal = animal,
-                navigateBack = actions.upPress
-            )
+            val scope = rememberCoroutineScope()
+            val animal: Animal? by viewModel.animal.collectAsState(scope.coroutineContext)
+
+            LaunchedEffect(id) {
+                viewModel.loadAnimalWithId(id)
+            }
+
+            animal?.let {
+                DetailsScreen(it)
+            }
         }
     }
 }
 
 class MainActions(navController: NavHostController) {
-    val goToDetailsScreen: (Animal) -> Unit = { animal ->
-        // TODO fix temporary hack as passing Parcelable objects is not supported from Compose navigation
-        navController
-            .currentBackStackEntry
-            ?.arguments
-            ?.putParcelable(animal::class.simpleName, animal)
-        navController.navigate(Screen.DetailsScreen.route)
+    val goToDetailsScreen: (Int) -> Unit = { id ->
+        navController.navigate(Screen.DetailsScreen.createRoute(id))
     }
 
     val upPress: () -> Unit = {

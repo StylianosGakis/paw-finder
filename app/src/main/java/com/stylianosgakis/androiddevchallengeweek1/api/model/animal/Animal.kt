@@ -15,16 +15,12 @@
  */
 package com.stylianosgakis.androiddevchallengeweek1.api.model.animal
 
-import android.os.Parcelable
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
-// TODO remove Parcelable from Animal and pass it to the other composable just by ID
 data class Animal(
     val age: String,
     val attributes: Attributes,
@@ -52,12 +48,14 @@ data class Animal(
     val statusChangedAt: String,
     val type: String,
     val url: String,
-) : Parcelable {
+) {
     val simpleOneWordCapitalizedName: String
         get() = name.toLowerCase(Locale("en"))
             .split(" ")
             .first()
             .run {
-                capitalize(java.util.Locale.ENGLISH)
+                replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(java.util.Locale.ENGLISH) else it.toString()
+                }
             }
 }

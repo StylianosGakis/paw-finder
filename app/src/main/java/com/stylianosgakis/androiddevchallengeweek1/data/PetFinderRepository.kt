@@ -17,16 +17,21 @@ package com.stylianosgakis.androiddevchallengeweek1.data
 
 import com.stylianosgakis.androiddevchallengeweek1.api.PetFinderApi
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
-import kotlinx.coroutines.Dispatchers
+import com.stylianosgakis.androiddevchallengeweek1.di.IoDispatcher
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-class PetFinderRepository(
+@Singleton
+class PetFinderRepository @Inject constructor(
     private val petFinderApi: PetFinderApi,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     suspend fun getAnimals(
         animalType: AnimalType,
         page: Int,
-    ): List<Animal> = withContext(Dispatchers.IO) {
+    ): List<Animal> = withContext(ioDispatcher) {
         return@withContext petFinderApi.searchAnimals(
             animalType.type,
             page
@@ -45,5 +50,11 @@ class PetFinderRepository(
                 it.photos.size > 1
             }
             .sortedByDescending { animal -> animal.id }
+    }
+
+    suspend fun getAnimal(
+        id: Int
+    ): Animal = withContext(ioDispatcher) {
+        petFinderApi.searchAnimal(id).animal
     }
 }

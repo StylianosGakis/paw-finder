@@ -15,6 +15,10 @@ My submission for the #AndroidDevChallenge week 1.
 
 ## :camera_flash: Screenshots
 <img src="/results/screenshot_1.jpg" width="260"> <img src="/results/screenshot_2.jpg" width="260">
+## width="320" height="240"
+<video  controls>
+  <source src="video.mov" type="video/mp4">
+</video>
 
 ## License
 ```

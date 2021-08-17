@@ -41,7 +41,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
 import com.stylianosgakis.androiddevchallengeweek1.theme.animalCardBackgroundColor
-import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
 fun AnimalCard(
@@ -57,15 +56,15 @@ fun AnimalCard(
         photoPosition = photoPosition,
         photo = {
             CoilImage(
-                data = animal.photos.first().medium,
+                data = animal.photos.firstOrNull()?.medium ?: "",
                 contentDescription = "Animal photo",
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 loading = { LoadingImage() },
                 error = { LoadingImage() },
                 modifier = Modifier
                     .size(width = 150.dp, height = 200.dp)
                     .clip(MaterialTheme.shapes.small)
-                    .clickable { goToDetailsScreen() }
+                    .clickable { goToDetailsScreen() },
             )
         },
         animalDetails = { clipShape ->
@@ -135,13 +134,13 @@ fun AnimalCard(
 private fun AnimalCard(
     photoPosition: PhotoPosition,
     photo: @Composable RowScope.() -> Unit,
-    animalDetails: @Composable (RowScope.(clipShape: Shape) -> Unit),
+    animalDetails: @Composable RowScope.(clipShape: Shape) -> Unit,
 ) {
     when (photoPosition) {
         PhotoPosition.Left -> {
             val clipShape = MaterialTheme.shapes.small.copy(
                 topStart = CornerSize(0.dp),
-                bottomEnd = CornerSize(0.dp),
+                bottomStart = CornerSize(0.dp),
             )
             Row {
                 photo()
@@ -151,7 +150,7 @@ private fun AnimalCard(
         PhotoPosition.Right -> {
             val clipShape = MaterialTheme.shapes.small.copy(
                 topEnd = CornerSize(0.dp),
-                bottomStart = CornerSize(0.dp),
+                bottomEnd = CornerSize(0.dp),
             )
             Row {
                 animalDetails(clipShape)

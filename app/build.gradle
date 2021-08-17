@@ -67,6 +67,7 @@ android {
     }
 
     composeOptions {
+        kotlinCompilerVersion kotlin_version
         kotlinCompilerExtensionVersion compose_version
     }
 
@@ -79,13 +80,13 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.activity:activity-compose:1.3.0-alpha03'
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
 
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha02"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
 
     // Compose
     implementation "androidx.compose.foundation:foundation:$compose_version"
@@ -97,43 +98,42 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.compose.ui:ui-util:$compose_version"
 
-    // Accompanist
-    def accompanist_version = "0.6.0"
-    implementation "dev.chrisbanes.accompanist:accompanist-coil:$accompanist_version"
-    implementation "dev.chrisbanes.accompanist:accompanist-insets:$accompanist_version"
+    // Insets
+    def accompanist_version = "0.16.1"
+    implementation "com.google.accompanist:systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
+
+    // Image loading
+    implementation("io.coil-kt:coil-compose:1.3.2")
 
     // Navigation
-    implementation "androidx.navigation:navigation-compose:1.0.0-alpha08"
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha06"
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // DI
-    implementation "androidx.hilt:hilt-navigation-fragment:1.0.0-alpha03"
+    implementation "androidx.hilt:hilt-navigation-fragment:1.0.0"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$androidx_hilt_version"
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version" // mine ??
     kapt "androidx.hilt:hilt-compiler:$androidx_hilt_version"
 
     // Api
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.okhttp3:logging-interceptor:4.4.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
     implementation "com.squareup.okhttp3:okhttp:4.9.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
 
-    // Navigation
-    implementation "androidx.navigation:navigation-compose:1.0.0-alpha08"
-
     // Datastore Preferences
-    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha07"
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     // Compose preview
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }

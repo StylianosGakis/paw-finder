@@ -29,11 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.stylianosgakis.androiddevchallengeweek1.theme.AppTheme
 import com.stylianosgakis.androiddevchallengeweek1.ui.AppScreen
 import com.stylianosgakis.androiddevchallengeweek1.util.themeColor
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
 
 @ExperimentalMaterialApi
 @AndroidEntryPoint

@@ -50,24 +50,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsPadding
 import com.stylianosgakis.androiddevchallengeweek1.R
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Photo
+import com.stylianosgakis.androiddevchallengeweek1.components.CoilImage
 import com.stylianosgakis.androiddevchallengeweek1.components.ExtendedFab
 import com.stylianosgakis.androiddevchallengeweek1.components.LoadingImage
 import com.stylianosgakis.androiddevchallengeweek1.components.SingleLineText
 import com.stylianosgakis.androiddevchallengeweek1.util.themeColor
-import dev.chrisbanes.accompanist.coil.CoilImage
-import dev.chrisbanes.accompanist.insets.navigationBarsPadding
 
 @Composable
-fun DetailsScreen(
-    animal: Animal,
-    navigateBack: () -> Unit, // Just go back using back button for now, it's Android :)
-) {
+fun DetailsScreen(animal: Animal) {
     var selectedImageIndex by remember { mutableStateOf(0) }
 
-    // TODO fix: Super ugly hack to change the status bar color because I am running out of time. Chris banes I have failed you.
+    // TODO: Look at this again. Ugly way to change the status bar color
     val context = LocalContext.current
     DisposableEffect(Unit) {
         val window = (context as Activity).window
@@ -107,8 +104,7 @@ fun DetailsScreen(
                 .navigationBarsPadding()
         ) {
             ExtendedFab(
-                onClick = {
-                },
+                onClick = {},
                 text = "ADOPT ME!",
                 imageVector = Icons.TwoTone.Pets
             )

@@ -30,4 +30,8 @@ enum class AnimalType(val type: String) {
             SmallAndFurry -> type.split(" ").last()
             else -> type.split(" ").first().removeSuffix(",")
         }
+
+    companion object {
+        fun fromString(animalType: String): AnimalType = valueOf(animalType)
+    }
 }
