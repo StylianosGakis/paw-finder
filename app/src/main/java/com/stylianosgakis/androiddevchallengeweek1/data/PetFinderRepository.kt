@@ -18,10 +18,10 @@ package com.stylianosgakis.androiddevchallengeweek1.data
 import com.stylianosgakis.androiddevchallengeweek1.api.PetFinderApi
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
 import com.stylianosgakis.androiddevchallengeweek1.di.IoDispatcher
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 class PetFinderRepository @Inject constructor(

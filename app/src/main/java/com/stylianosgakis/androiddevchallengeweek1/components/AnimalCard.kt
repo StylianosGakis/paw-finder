@@ -38,9 +38,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.skydoves.landscapist.coil.CoilImage
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
+import com.stylianosgakis.androiddevchallengeweek1.theme.AppTheme
 import com.stylianosgakis.androiddevchallengeweek1.theme.animalCardBackgroundColor
+import com.stylianosgakis.androiddevchallengeweek1.util.previewAnimal
+
+private enum class PhotoPosition {
+    Left, Right
+}
 
 @Composable
 fun AnimalCard(
@@ -56,11 +64,11 @@ fun AnimalCard(
         photoPosition = photoPosition,
         photo = {
             CoilImage(
-                data = animal.photos.firstOrNull()?.medium ?: "",
+                imageModel = animal.photos.firstOrNull()?.medium ?: "",
                 contentDescription = "Animal photo",
                 contentScale = ContentScale.Crop,
                 loading = { LoadingImage() },
-                error = { LoadingImage() },
+                failure = { LoadingImage() },
                 modifier = Modifier
                     .size(width = 150.dp, height = 200.dp)
                     .clip(MaterialTheme.shapes.small)
@@ -160,6 +168,14 @@ private fun AnimalCard(
     }
 }
 
-private enum class PhotoPosition {
-    Left, Right
+@Preview
+@Composable
+fun AnimalCardPreview() {
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colors.background,
+        ) {
+            AnimalCard(cardIndex = 0, animal = previewAnimal, goToDetailsScreen = {})
+        }
+    }
 }

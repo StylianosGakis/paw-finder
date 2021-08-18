@@ -15,14 +15,12 @@
  */
 package com.stylianosgakis.androiddevchallengeweek1.ui
 
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,11 +33,10 @@ import com.stylianosgakis.androiddevchallengeweek1.ui.animals.AnimalsScreen
 import com.stylianosgakis.androiddevchallengeweek1.ui.animals.AnimalsScreenViewModel
 import com.stylianosgakis.androiddevchallengeweek1.util.viewModel
 
-@ExperimentalMaterialApi
 @Composable
 fun AppScreen() {
     val navController = rememberNavController()
-    val actions = remember(navController) { MainActions(navController) }
+    val actions = remember(navController) { NavigationActions(navController) }
 
     NavHost(
         navController = navController,
@@ -85,15 +82,5 @@ fun AppScreen() {
                 DetailsScreen(it)
             }
         }
-    }
-}
-
-class MainActions(navController: NavHostController) {
-    val goToDetailsScreen: (Int) -> Unit = { id ->
-        navController.navigate(Screen.DetailsScreen.createRoute(id))
-    }
-
-    val upPress: () -> Unit = {
-        navController.navigateUp()
     }
 }
