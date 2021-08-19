@@ -15,6 +15,7 @@
  */
 package com.stylianosgakis.androiddevchallengeweek1.ui.animaldetails
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
@@ -22,30 +23,44 @@ import com.stylianosgakis.androiddevchallengeweek1.data.PetFinderRepository
 import com.stylianosgakis.androiddevchallengeweek1.di.DefaultDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailsScreenViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val petFinderRepository: PetFinderRepository,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
+    private val animalId: Int = savedStateHandle.get("id")!!
 
-    private var fetchAnimalJob: Job? = null
+    private val animalStateFlow = MutableStateFlow<Animal?>(null)
 
-    private val _animal = MutableStateFlow<Animal?>(null)
-    val animal: StateFlow<Animal?>
-        get() = _animal.asStateFlow()
+    val state: StateFlow<DetailsScreenViewState> = animalStateFlow.map { animal: Animal? ->
+        if (animal == null) {
+            DetailsScreenViewState.Loading
+        } else {
+            DetailsScreenViewState.Loaded(animal)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = DetailsScreenViewState.Initial
+    )
 
-    fun loadAnimalWithId(id: Int) {
-        fetchAnimalJob?.cancel()
-        fetchAnimalJob = viewModelScope.launch(defaultDispatcher) {
-            val animal: Animal = petFinderRepository.getAnimal(id)
-            _animal.value = animal
+    init {
+        loadAnimal()
+    }
+
+    private fun loadAnimal() {
+        viewModelScope.launch(defaultDispatcher) {
+            val animal: Animal = petFinderRepository.getAnimal(animalId)
+            animalStateFlow.value = animal
         }
     }
 }

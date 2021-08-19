@@ -15,72 +15,113 @@
  */
 package com.stylianosgakis.androiddevchallengeweek1.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
-import androidx.navigation.compose.rememberNavController
-import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.stylianosgakis.androiddevchallengeweek1.ui.animaldetails.DetailsScreen
-import com.stylianosgakis.androiddevchallengeweek1.ui.animaldetails.DetailsScreenViewModel
 import com.stylianosgakis.androiddevchallengeweek1.ui.animals.AnimalsScreen
-import com.stylianosgakis.androiddevchallengeweek1.ui.animals.AnimalsScreenViewModel
-import com.stylianosgakis.androiddevchallengeweek1.util.viewModel
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppScreen() {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     val actions = remember(navController) { NavigationActions(navController) }
 
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
         startDestination = Screen.AnimalsScreen.route,
     ) {
-        composable(Screen.AnimalsScreen.route) { navBackStackEntry ->
-            val viewModel: AnimalsScreenViewModel = navBackStackEntry.viewModel()
+        addAnimalsScreen(actions)
+        addAnimalDetailScreen()
+    }
+}
 
-            val scope = rememberCoroutineScope()
-            val animalList by viewModel.animalList.collectAsState(scope.coroutineContext)
-            val selectedAnimalType by viewModel.animalType.collectAsState(scope.coroutineContext)
-
-            AnimalsScreen(
-                animalList = animalList,
-                selectedAnimalType = selectedAnimalType,
-                setSelectedAnimalType = { animalType ->
-                    viewModel.setAnimalType(animalType)
-                },
-                goToDetailsScreen = { animalId: Int ->
-                    actions.goToDetailsScreen(animalId)
-                },
-            )
-        }
-        composable(
-            route = Screen.DetailsScreen.route,
-            arguments = listOf(
-                navArgument("id") {
-                    type = NavType.IntType
+@OptIn(ExperimentalAnimationApi::class)
+private fun NavGraphBuilder.addAnimalsScreen(
+    actions: NavigationActions,
+) {
+    val animationDuration = 300
+    composable(
+        route = Screen.AnimalsScreen.route,
+        enterTransition = { initial, _ ->
+            when (initial.destination.route) {
+                Screen.DetailsScreen.route -> {
+                    slideInHorizontally(
+                        initialOffsetX = { -300 },
+                        animationSpec = tween(animationDuration),
+                    ) + fadeIn(
+                        animationSpec = tween(animationDuration)
+                    )
                 }
-            )
-        ) { navBackStackEntry ->
-            val viewModel: DetailsScreenViewModel = navBackStackEntry.viewModel()
-            val id = remember { navBackStackEntry.arguments!!.getInt("id") }
-
-            val scope = rememberCoroutineScope()
-            val animal: Animal? by viewModel.animal.collectAsState(scope.coroutineContext)
-
-            LaunchedEffect(id) {
-                viewModel.loadAnimalWithId(id)
+                else -> null
             }
-
-            animal?.let {
-                DetailsScreen(it)
+        },
+        exitTransition = { _, target ->
+            when (target.destination.route) {
+                Screen.AnimalsScreen.route -> {
+                    slideOutHorizontally(
+                        targetOffsetX = { -300 },
+                        animationSpec = tween(animationDuration),
+                    ) + fadeOut(
+                        animationSpec = tween(animationDuration)
+                    )
+                }
+                else -> null
             }
         }
+    ) {
+        AnimalsScreen(actions)
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun NavGraphBuilder.addAnimalDetailScreen() {
+    val animationDuration = 300
+    composable(
+        route = Screen.DetailsScreen.route,
+        arguments = listOf(
+            navArgument("id") {
+                type = NavType.IntType
+            }
+        ),
+        enterTransition = { initial, _ ->
+            when (initial.destination.route) {
+                Screen.AnimalsScreen.route -> {
+                    slideInHorizontally(
+                        initialOffsetX = { 300 },
+                        animationSpec = tween(animationDuration)
+                    ) + fadeIn(
+                        animationSpec = tween(animationDuration)
+                    )
+                }
+                else -> null
+            }
+        },
+        exitTransition = { _, target ->
+            when (target.destination.route) {
+                Screen.AnimalsScreen.route -> {
+                    slideOutHorizontally(
+                        targetOffsetX = { 300 },
+                        animationSpec = tween(animationDuration)
+                    ) + fadeOut(
+                        animationSpec = tween(animationDuration)
+                    )
+                }
+                else -> null
+            }
+        }
+    ) {
+        DetailsScreen()
     }
 }

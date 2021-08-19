@@ -27,9 +27,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Pets
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,32 +39,57 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
 import com.stylianosgakis.androiddevchallengeweek1.components.ExtendedFab
+import com.stylianosgakis.androiddevchallengeweek1.components.LoadingScreen
 import com.stylianosgakis.androiddevchallengeweek1.theme.AppTheme
+import com.stylianosgakis.androiddevchallengeweek1.util.exhaustive
 import com.stylianosgakis.androiddevchallengeweek1.util.previewAnimal
+import com.stylianosgakis.androiddevchallengeweek1.util.rememberFlowWithLifecycle
 
 @Composable
-fun DetailsScreen(animal: Animal) {
+fun DetailsScreen() {
+    val viewModel: DetailsScreenViewModel = hiltViewModel()
+    val viewState: DetailsScreenViewState by rememberFlowWithLifecycle(viewModel.state)
+        .collectAsState(initial = DetailsScreenViewState.Initial)
+
+    DetailsScreen(viewState)
+}
+
+@Composable
+private fun DetailsScreen(viewState: DetailsScreenViewState) {
+    when (viewState) {
+        DetailsScreenViewState.Loading -> {
+            Box(Modifier.fillMaxSize()) {
+                LoadingScreen()
+            }
+        }
+        is DetailsScreenViewState.Loaded -> {
+            DetailsScreen(viewState.animal)
+        }
+    }.exhaustive
+}
+
+@Composable
+private fun DetailsScreen(animal: Animal) {
 
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
     DisposableEffect(Unit) {
         val window = (context as? Activity)?.window
-        if (window != null) {
-            val oldColor = window.statusBarColor
-            systemUiController.setStatusBarColor(Color.Transparent)
-            onDispose {
+        val oldColor = window?.statusBarColor
+        systemUiController.setStatusBarColor(Color.Transparent, true)
+        onDispose {
+            if (oldColor != null) {
                 window.statusBarColor = oldColor
             }
-        } else {
-            onDispose { }
         }
     }
 
-    var selectedImageIndex by rememberSaveable { mutableStateOf(0) }
+    var selectedImageIndex by remember { mutableStateOf(0) }
 
     Box(
         modifier = Modifier.fillMaxSize()

@@ -5,6 +5,7 @@
     <disabledRules>
       <list>
         <option value="import-ordering" />
+        <option value="filename" />
       </list>
     </disabledRules>
   </component>

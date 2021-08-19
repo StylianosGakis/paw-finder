@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
@@ -33,31 +32,54 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.stylianosgakis.androiddevchallengeweek1.api.model.animal.Animal
 import com.stylianosgakis.androiddevchallengeweek1.components.AnimalCard
+import com.stylianosgakis.androiddevchallengeweek1.components.LoadingScreen
 import com.stylianosgakis.androiddevchallengeweek1.data.AnimalType
 import com.stylianosgakis.androiddevchallengeweek1.theme.AppTheme
 import com.stylianosgakis.androiddevchallengeweek1.theme.bottomSheetShape
 import com.stylianosgakis.androiddevchallengeweek1.ui.FindMyPetAppBar
+import com.stylianosgakis.androiddevchallengeweek1.ui.NavigationActions
 import com.stylianosgakis.androiddevchallengeweek1.util.isScrollingForwardsAsState
 import com.stylianosgakis.androiddevchallengeweek1.util.previewAnimal
 import kotlinx.coroutines.launch
 
+@Composable
+fun AnimalsScreen(actions: NavigationActions) {
+    val viewModel: AnimalsScreenViewModel = hiltViewModel()
+
+    val scope = rememberCoroutineScope()
+    val animalList by viewModel.animalList.collectAsState(scope.coroutineContext)
+    val selectedAnimalType by viewModel.animalType.collectAsState(scope.coroutineContext)
+
+    AnimalsScreen(
+        animalList = animalList,
+        selectedAnimalType = selectedAnimalType,
+        setSelectedAnimalType = { animalType ->
+            viewModel.setAnimalType(animalType)
+        },
+        goToDetailsScreen = { animalId: Int ->
+            actions.goToDetailsScreen(animalId)
+        },
+    )
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AnimalsScreen(
+private fun AnimalsScreen(
     animalList: List<Animal>,
     selectedAnimalType: AnimalType,
     setSelectedAnimalType: (AnimalType) -> Unit,
@@ -100,12 +122,7 @@ fun AnimalsScreen(
                 var fabHeight by remember { mutableStateOf(0) }
 
                 if (animalList.isEmpty()) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(
-                            BiasAlignment(verticalBias = -0.4f, horizontalBias = 0f)
-                        )
-
-                    )
+                    LoadingScreen()
                 }
 
                 LazyColumn(

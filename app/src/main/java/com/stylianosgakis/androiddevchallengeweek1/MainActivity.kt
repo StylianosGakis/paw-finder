@@ -19,7 +19,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -34,7 +33,6 @@ import com.stylianosgakis.androiddevchallengeweek1.ui.AppScreen
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
-@ExperimentalMaterialApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             AppTheme {
-                EdgeToEdgeContent {
-                    ColoredSystemBarsContent {
+                ColoredSystemBarsContent {
+                    EdgeToEdgeContent {
                         Surface(
                             color = MaterialTheme.colors.background,
                             modifier = Modifier.fillMaxSize()
