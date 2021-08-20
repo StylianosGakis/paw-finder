@@ -52,6 +52,20 @@ import com.stylianosgakis.pawfinder.util.rememberFlowWithLifecycle
 
 @Composable
 fun DetailsScreen() {
+
+    val context = LocalContext.current
+    val systemUiController = rememberSystemUiController()
+    DisposableEffect(Unit) {
+        val window = (context as? Activity)?.window
+        val oldColor = window?.statusBarColor
+        systemUiController.setStatusBarColor(Color.Transparent, true)
+        onDispose {
+            if (oldColor != null) {
+                window.statusBarColor = oldColor
+            }
+        }
+    }
+
     val viewModel: DetailsScreenViewModel = hiltViewModel()
     val viewState: DetailsScreenViewState by rememberFlowWithLifecycle(viewModel.state)
         .collectAsState(initial = DetailsScreenViewState.Initial)
@@ -75,19 +89,6 @@ private fun DetailsScreen(viewState: DetailsScreenViewState) {
 
 @Composable
 private fun DetailsScreen(animal: Animal) {
-
-    val context = LocalContext.current
-    val systemUiController = rememberSystemUiController()
-    DisposableEffect(Unit) {
-        val window = (context as? Activity)?.window
-        val oldColor = window?.statusBarColor
-        systemUiController.setStatusBarColor(Color.Transparent, true)
-        onDispose {
-            if (oldColor != null) {
-                window.statusBarColor = oldColor
-            }
-        }
-    }
 
     var selectedImageIndex by remember { mutableStateOf(0) }
 
