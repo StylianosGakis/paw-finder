@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.stylianosgakis.androiddevchallengeweek1">
+    package="com.stylianosgakis.pawfinder">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".App"
+        android:name="com.stylianosgakis.pawfinder.App"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AndroidDevChallengeWeek1">
+        android:theme="@style/Theme.PawFinder">
         <activity
-            android:name=".MainActivity"
+            android:name="com.stylianosgakis.pawfinder.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AndroidDevChallengeWeek1.NoActionBar.TransparentBars">
+            android:theme="@style/Theme.PawFinder.NoActionBar.TransparentBars">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

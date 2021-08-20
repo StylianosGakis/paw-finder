@@ -15,7 +15,7 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "com.stylianosgakis.androiddevchallengeweek1"
+        applicationId "com.stylianosgakis.pawfinder"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
