@@ -34,26 +34,7 @@ import com.stylianosgakis.pawfinder.theme.AnimalGenderUnknown
 fun GenderChip(
     genderString: String,
 ) {
-    val iconData = when (Gender.fromString(genderString)) {
-        Gender.Female -> {
-            IconData(
-                imageVector = Icons.Default.Female,
-                color = AnimalGenderFemale,
-            )
-        }
-        Gender.Male -> {
-            IconData(
-                imageVector = Icons.Default.Male,
-                color = AnimalGenderMale,
-            )
-        }
-        Gender.Unknown -> {
-            IconData(
-                imageVector = Icons.Default.HelpOutline,
-                color = AnimalGenderUnknown,
-            )
-        }
-    }
+    val iconData = Gender.fromString(genderString).iconData()
     Icon(
         imageVector = iconData.imageVector,
         tint = iconData.color,
@@ -68,7 +49,6 @@ private class IconData(
 )
 
 sealed class Gender {
-
     companion object {
         @Suppress("RemoveRedundantQualifierName")
         fun fromString(gender: String): Gender = when {
@@ -81,4 +61,26 @@ sealed class Gender {
     object Female : Gender()
     object Male : Gender()
     object Unknown : Gender()
+}
+
+@Composable
+private fun Gender.iconData() = when (this) {
+    Gender.Female -> {
+        IconData(
+            imageVector = Icons.Default.Female,
+            color = AnimalGenderFemale,
+        )
+    }
+    Gender.Male -> {
+        IconData(
+            imageVector = Icons.Default.Male,
+            color = AnimalGenderMale,
+        )
+    }
+    Gender.Unknown -> {
+        IconData(
+            imageVector = Icons.Default.HelpOutline,
+            color = AnimalGenderUnknown,
+        )
+    }
 }

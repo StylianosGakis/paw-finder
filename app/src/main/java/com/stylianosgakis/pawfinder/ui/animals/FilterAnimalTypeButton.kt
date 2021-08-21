@@ -44,7 +44,7 @@ fun FilterAnimalTypeButton(
 
     val alpha by transition.animateFloat(
         transitionSpec = { tween(durationMillis = 280, easing = FastOutSlowInEasing) },
-        label = "",
+        label = "alpha",
     ) { isVisible ->
         when (isVisible) {
             true -> 1f

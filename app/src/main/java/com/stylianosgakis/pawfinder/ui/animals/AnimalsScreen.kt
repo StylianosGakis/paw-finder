@@ -15,13 +15,14 @@
  */
 package com.stylianosgakis.pawfinder.ui.animals
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -32,6 +33,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +42,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,14 +51,17 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.stylianosgakis.pawfinder.api.model.animal.Animal
 import com.stylianosgakis.pawfinder.components.AnimalCard
 import com.stylianosgakis.pawfinder.components.LoadingScreen
+import com.stylianosgakis.pawfinder.components.indicateRecompositions
 import com.stylianosgakis.pawfinder.data.AnimalType
 import com.stylianosgakis.pawfinder.theme.AppTheme
 import com.stylianosgakis.pawfinder.theme.bottomSheetShape
 import com.stylianosgakis.pawfinder.ui.FindMyPetAppBar
 import com.stylianosgakis.pawfinder.ui.NavigationActions
-import com.stylianosgakis.pawfinder.util.isScrollingForwardsAsState
+import com.stylianosgakis.pawfinder.util.isLastItemVisible
+import com.stylianosgakis.pawfinder.util.isScrollingForwards
 import com.stylianosgakis.pawfinder.util.previewAnimal
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun AnimalsScreen(actions: NavigationActions) {
@@ -85,10 +91,12 @@ private fun AnimalsScreen(
     setSelectedAnimalType: (AnimalType) -> Unit,
     goToDetailsScreen: (id: Int) -> Unit,
 ) {
-    val lazyListState = rememberLazyListState()
-    val isScrollingForwards by lazyListState.isScrollingForwardsAsState()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
+    val lazyListState: LazyListState = rememberLazyListState()
+    val isScrollingForwards = lazyListState.isScrollingForwards()
+    val isLastItemVisible = lazyListState.isLastItemVisible()
 
     Scaffold(
         topBar = { FindMyPetAppBar() },
@@ -129,11 +137,9 @@ private fun AnimalsScreen(
                     state = lazyListState,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    contentPadding = PaddingValues(top = 16.dp, bottom = fabHeight.dp),
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
-                    item {
-                        Spacer(modifier = Modifier)
-                    }
                     itemsIndexed(
                         items = animalList,
                         key = { _, animal -> animal.id }
@@ -142,12 +148,6 @@ private fun AnimalsScreen(
                             cardIndex = index,
                             animal = animal,
                             goToDetailsScreen = { goToDetailsScreen(animal.id) },
-                        )
-                    }
-                    item {
-                        Spacer(
-                            modifier = Modifier
-                                .height(fabHeight.dp) // TODO make the space follow the fab size properly
                         )
                     }
                 }
@@ -159,7 +159,7 @@ private fun AnimalsScreen(
                         }
                     },
                     visible = !modalSheetState.isVisible &&
-                        (animalList.isEmpty() || isScrollingForwards),
+                        (animalList.isEmpty() || isScrollingForwards || isLastItemVisible),
                     modifier = Modifier
                         .onSizeChanged {
                             fabHeight = it.height

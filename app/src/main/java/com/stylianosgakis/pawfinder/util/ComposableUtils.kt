@@ -15,7 +15,6 @@
  */
 package com.stylianosgakis.pawfinder.util
 
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -24,33 +23,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-
-private class ScrollInfo(
-    var index: Int = 0,
-    var scrollOffset: Int = 0,
-)
-
-@Composable
-fun LazyListState.isScrollingForwardsAsState(): State<Boolean> {
-    val oldScrollInfo = remember(this) { ScrollInfo() }
-    val scrollOffset by rememberUpdatedState(firstVisibleItemScrollOffset)
-    val index by rememberUpdatedState(firstVisibleItemIndex)
-    return remember(this) {
-        derivedStateOf {
-            val isForward = when {
-                oldScrollInfo.index != index -> oldScrollInfo.index < index
-                else -> oldScrollInfo.scrollOffset < scrollOffset
-            }
-            oldScrollInfo.scrollOffset = scrollOffset
-            oldScrollInfo.index = index
-            return@derivedStateOf isForward
-        }
-    }
-}
 
 @ExperimentalMaterialApi
 @Composable

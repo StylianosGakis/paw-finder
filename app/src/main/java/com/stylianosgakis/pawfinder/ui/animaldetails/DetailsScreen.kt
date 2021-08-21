@@ -48,7 +48,6 @@ import com.stylianosgakis.pawfinder.components.LoadingScreen
 import com.stylianosgakis.pawfinder.theme.AppTheme
 import com.stylianosgakis.pawfinder.util.exhaustive
 import com.stylianosgakis.pawfinder.util.previewAnimal
-import com.stylianosgakis.pawfinder.util.rememberFlowWithLifecycle
 
 @Composable
 fun DetailsScreen() {
@@ -67,22 +66,25 @@ fun DetailsScreen() {
     }
 
     val viewModel: DetailsScreenViewModel = hiltViewModel()
-    val viewState: DetailsScreenViewState by rememberFlowWithLifecycle(viewModel.state)
-        .collectAsState(initial = DetailsScreenViewState.Initial)
+    val viewState: DetailsScreenViewState by viewModel.state.collectAsState(DetailsScreenViewState.Initial)
 
     DetailsScreen(viewState)
 }
 
+/**
+ * TODO: Pass [DetailsScreenViewState] to the [DetailsScreen] instead of [Animal] and load
+ *  placeholders in place of the full-screen ugly loading circle
+ */
 @Composable
-private fun DetailsScreen(viewState: DetailsScreenViewState) {
-    when (viewState) {
+private fun DetailsScreen(detailsScreenViewState: DetailsScreenViewState) {
+    when (detailsScreenViewState) {
         DetailsScreenViewState.Loading -> {
             Box(Modifier.fillMaxSize()) {
                 LoadingScreen()
             }
         }
         is DetailsScreenViewState.Loaded -> {
-            DetailsScreen(viewState.animal)
+            DetailsScreen(detailsScreenViewState.animal)
         }
     }.exhaustive
 }
