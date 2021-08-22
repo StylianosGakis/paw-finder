@@ -16,11 +16,6 @@
 package com.stylianosgakis.pawfinder.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
@@ -51,18 +46,12 @@ fun AppScreen() {
 private fun NavGraphBuilder.addAnimalsScreen(
     actions: NavigationActions,
 ) {
-    val animationDuration = 300
     composable(
         route = Screen.AnimalsScreen.route,
         enterTransition = { initial, _ ->
             when (initial.destination.route) {
                 Screen.DetailsScreen.route -> {
-                    slideInHorizontally(
-                        initialOffsetX = { -300 },
-                        animationSpec = tween(animationDuration),
-                    ) + fadeIn(
-                        animationSpec = tween(animationDuration)
-                    )
+                    slideAndFadeIn(from = Direction.Left)
                 }
                 else -> null
             }
@@ -70,12 +59,7 @@ private fun NavGraphBuilder.addAnimalsScreen(
         exitTransition = { _, target ->
             when (target.destination.route) {
                 Screen.AnimalsScreen.route -> {
-                    slideOutHorizontally(
-                        targetOffsetX = { -300 },
-                        animationSpec = tween(animationDuration),
-                    ) + fadeOut(
-                        animationSpec = tween(animationDuration)
-                    )
+                    slideAndFadeOut(to = Direction.Left)
                 }
                 else -> null
             }
@@ -87,7 +71,6 @@ private fun NavGraphBuilder.addAnimalsScreen(
 
 @OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addAnimalDetailScreen() {
-    val animationDuration = 300
     composable(
         route = Screen.DetailsScreen.route,
         arguments = listOf(
@@ -98,12 +81,7 @@ private fun NavGraphBuilder.addAnimalDetailScreen() {
         enterTransition = { initial, _ ->
             when (initial.destination.route) {
                 Screen.AnimalsScreen.route -> {
-                    slideInHorizontally(
-                        initialOffsetX = { 300 },
-                        animationSpec = tween(animationDuration)
-                    ) + fadeIn(
-                        animationSpec = tween(animationDuration)
-                    )
+                    slideAndFadeIn(from = Direction.Right)
                 }
                 else -> null
             }
@@ -111,12 +89,7 @@ private fun NavGraphBuilder.addAnimalDetailScreen() {
         exitTransition = { _, target ->
             when (target.destination.route) {
                 Screen.AnimalsScreen.route -> {
-                    slideOutHorizontally(
-                        targetOffsetX = { 300 },
-                        animationSpec = tween(animationDuration)
-                    ) + fadeOut(
-                        animationSpec = tween(animationDuration)
-                    )
+                    slideAndFadeOut(to = Direction.Right)
                 }
                 else -> null
             }
