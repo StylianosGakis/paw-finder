@@ -58,7 +58,7 @@ private fun NavGraphBuilder.addAnimalsScreen(
         },
         exitTransition = { _, target ->
             when (target.destination.route) {
-                Screen.AnimalsScreen.route -> {
+                Screen.DetailsScreen.route -> {
                     slideAndFadeOut(to = Direction.Left)
                 }
                 else -> null
