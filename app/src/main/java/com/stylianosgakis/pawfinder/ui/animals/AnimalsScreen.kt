@@ -33,6 +33,7 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -62,9 +64,8 @@ import kotlinx.coroutines.launch
 fun AnimalsScreen(actions: NavigationActions) {
     val viewModel: AnimalsScreenViewModel = hiltViewModel()
 
-    val scope = rememberCoroutineScope()
-    val animalList by viewModel.animalList.collectAsState(scope.coroutineContext)
-    val selectedAnimalType by viewModel.animalType.collectAsState(scope.coroutineContext)
+    val selectedAnimalType by viewModel.animalType.collectAsState()
+    val animalList by viewModel.animalListStateFlow.collectAsState()
 
     AnimalsScreen(
         animalList = animalList,
@@ -86,8 +87,7 @@ private fun AnimalsScreen(
     setSelectedAnimalType: (AnimalType) -> Unit,
     goToDetailsScreen: (id: Int) -> Unit,
 ) {
-    val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
+    val composableCoroutineScope = rememberCoroutineScope()
 
     val lazyListState: LazyListState = rememberLazyListState()
     val isScrollingForwards = lazyListState.isScrollingForwards()
@@ -95,7 +95,7 @@ private fun AnimalsScreen(
 
     Scaffold(
         topBar = { FindMyPetAppBar() },
-        scaffoldState = scaffoldState,
+        scaffoldState = rememberScaffoldState(),
     ) { paddingValues ->
         val modalSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         ModalBottomSheetLayout(
@@ -104,10 +104,11 @@ private fun AnimalsScreen(
                 AnimalTypePickerSheet(
                     selectedAnimalType = selectedAnimalType,
                     setSelectedAnimalType = { animalType ->
-                        scope.launch {
-                            modalSheetState.hide()
-                        }
                         setSelectedAnimalType(animalType)
+                        composableCoroutineScope.launch {
+                            modalSheetState.hide()
+                            lazyListState.animateScrollToItem(0)
+                        }
                     },
                 )
             },
@@ -122,7 +123,10 @@ private fun AnimalsScreen(
                     .padding(paddingValues)
                     .fillMaxSize()
             ) {
-                var fabHeight by remember { mutableStateOf(0) }
+                var fabHeightPx by remember { mutableStateOf(0) }
+                val fabHeightDp = with(LocalDensity.current) {
+                    fabHeightPx.toDp()
+                }
 
                 if (animalList.isEmpty()) {
                     LoadingScreen()
@@ -132,7 +136,7 @@ private fun AnimalsScreen(
                     state = lazyListState,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    contentPadding = PaddingValues(top = 16.dp, bottom = fabHeight.dp),
+                    contentPadding = PaddingValues(top = 16.dp, bottom = fabHeightDp),
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     itemsIndexed(
@@ -147,17 +151,20 @@ private fun AnimalsScreen(
                     }
                 }
 
+                val shouldFilterButtonShow by derivedStateOf {
+                    !modalSheetState.isVisible &&
+                        (animalList.isEmpty() || isScrollingForwards || isLastItemVisible)
+                }
                 FilterAnimalTypeButton(
                     onClick = {
-                        scope.launch {
+                        composableCoroutineScope.launch {
                             modalSheetState.show()
                         }
                     },
-                    visible = !modalSheetState.isVisible &&
-                        (animalList.isEmpty() || isScrollingForwards || isLastItemVisible),
+                    visible = shouldFilterButtonShow,
                     modifier = Modifier
-                        .onSizeChanged {
-                            fabHeight = it.height
+                        .onSizeChanged { intSize ->
+                            fabHeightPx = intSize.height
                         }
                         .align(Alignment.BottomCenter)
                         .navigationBarsPadding(),
