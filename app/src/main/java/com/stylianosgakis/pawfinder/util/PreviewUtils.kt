@@ -16,7 +16,7 @@
 package com.stylianosgakis.pawfinder.util
 
 import com.stylianosgakis.pawfinder.api.model.animal.Animal
-import com.stylianosgakis.pawfinder.api.model.animal.GetOneAnimalsResponse
+import com.stylianosgakis.pawfinder.api.model.animal.GetOneAnimalResponse
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -26,7 +26,7 @@ private val json = Json {
 
 val previewAnimal: Animal
     get() {
-        return json.decodeFromString<GetOneAnimalsResponse>(
+        return json.decodeFromString<GetOneAnimalResponse>(
             string = """
 {
     "animal": {

@@ -16,7 +16,7 @@
 package com.stylianosgakis.pawfinder.api
 
 import com.stylianosgakis.pawfinder.api.model.animal.GetAllAnimalsResponse
-import com.stylianosgakis.pawfinder.api.model.animal.GetOneAnimalsResponse
+import com.stylianosgakis.pawfinder.api.model.animal.GetOneAnimalResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -31,5 +31,5 @@ interface PetFinderApi {
     @GET("animals/{id}")
     suspend fun searchAnimal(
         @Path("id") id: Int
-    ): GetOneAnimalsResponse
+    ): GetOneAnimalResponse
 }

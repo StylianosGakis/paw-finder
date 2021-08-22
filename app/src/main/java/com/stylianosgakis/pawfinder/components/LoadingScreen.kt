@@ -16,10 +16,8 @@
 package com.stylianosgakis.pawfinder.components
 
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 
@@ -30,10 +28,4 @@ fun BoxScope.LoadingScreen() {
             BiasAlignment(verticalBias = -0.4f, horizontalBias = 0f)
         )
     )
-    Button(
-        onClick = {},
-        modifier = Modifier
-            .align(Alignment.Center)
-    ) {
-    }
 }

@@ -36,8 +36,6 @@ class PetFinderRepository @Inject constructor(
             animalType.type,
             page
         ).animals
-            // Filter animals without pictures for better looking UI
-            .filter { animal -> animal.photos.isNotEmpty() }
             // Filter not 'nice' names for better looking UI
             .filterNot { animal ->
                 animal.name.contains(

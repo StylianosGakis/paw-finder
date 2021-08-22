@@ -25,7 +25,7 @@ data class GetAllAnimalsResponse(
 )
 
 @Serializable
-data class GetOneAnimalsResponse(
+data class GetOneAnimalResponse(
     val animal: Animal,
 )
 
