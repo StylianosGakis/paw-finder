@@ -17,18 +17,18 @@ package com.stylianosgakis.pawfinder.ui.animaldetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.stylianosgakis.pawfinder.api.model.animal.Animal
 import com.stylianosgakis.pawfinder.data.PetFinderRepository
 import com.stylianosgakis.pawfinder.di.DefaultDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,30 +37,16 @@ class DetailsScreenViewModel @Inject constructor(
     private val petFinderRepository: PetFinderRepository,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
-    private val animalId: Int = savedStateHandle.get("id")!!
+    private val animalIdFlow: Flow<Int> = savedStateHandle.getLiveData<Int>("id").asFlow()
 
-    private val animalStateFlow = MutableStateFlow<Animal?>(null)
-
-    val state: StateFlow<DetailsScreenViewState> = animalStateFlow.map { animal: Animal? ->
-        if (animal == null) {
-            DetailsScreenViewState.Loading
-        } else {
+    val viewStateFlow: StateFlow<DetailsScreenViewState> = animalIdFlow
+        .map { animalId: Int ->
+            val animal = petFinderRepository.getAnimal(animalId)
             DetailsScreenViewState.Loaded(animal)
         }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = DetailsScreenViewState.Initial
-    )
-
-    init {
-        loadAnimal()
-    }
-
-    private fun loadAnimal() {
-        viewModelScope.launch(defaultDispatcher) {
-            val animal: Animal = petFinderRepository.getAnimal(animalId)
-            animalStateFlow.value = animal
-        }
-    }
+        .stateIn(
+            scope = viewModelScope + defaultDispatcher,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = DetailsScreenViewState.Loading
+        )
 }

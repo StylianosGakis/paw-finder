@@ -24,8 +24,4 @@ sealed class DetailsScreenViewState {
 
     @Immutable
     data class Loaded(val animal: Animal) : DetailsScreenViewState()
-
-    companion object {
-        val Initial: DetailsScreenViewState = Loading
-    }
 }
