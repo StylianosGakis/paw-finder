@@ -23,15 +23,17 @@ import com.stylianosgakis.pawfinder.data.PetFinderRepository
 import com.stylianosgakis.pawfinder.di.DefaultDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.plus
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,44 +42,35 @@ class AnimalsScreenViewModel @Inject constructor(
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    var loadSelectedOptionsJob: Job? = null
-
-    private val _animalList = MutableStateFlow<List<Animal>>(listOf())
-    val animalList: StateFlow<List<Animal>>
-        get() = _animalList.asStateFlow()
-
     private val _animalType: MutableStateFlow<AnimalType> = MutableStateFlow(AnimalType.Cat)
     val animalType: StateFlow<AnimalType>
         get() = _animalType.asStateFlow()
 
-    init {
-        loadSelectedOption()
-        _animalType.onEach {
-            loadSelectedOption()
-        }.launchIn(viewModelScope)
-    }
+    val animalListStateFlow: StateFlow<List<Animal>> = animalType
+        .map { animalType: AnimalType ->
+            coroutineScope {
+                val getAnimalAsyncCalls: List<Deferred<List<Animal>>> = List(4) { index ->
+                    async {
+                        petFinderRepository.getAnimals(
+                            animalType = animalType,
+                            page = (index + 1)
+                        )
+                    }
+                }
+                val animalList: List<Animal> = getAnimalAsyncCalls
+                    .awaitAll()
+                    .flatten()
+                    .distinct() // Remove potential duplicates because they break the lazyList by duplicating keys
+                animalList
+            }
+        }
+        .stateIn(
+            scope = viewModelScope + defaultDispatcher, // Not sure about setting a dispatcher here
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = listOf()
+        )
 
     fun setAnimalType(animalType: AnimalType) {
-        _animalList.value = listOf()
         _animalType.value = animalType
-    }
-
-    private fun loadSelectedOption() {
-        loadSelectedOptionsJob?.cancel()
-        loadSelectedOptionsJob = viewModelScope.launch(defaultDispatcher) {
-            // TODO Add page handling. For now just load some pages to be able to scroll freely
-            val getAnimalAsyncCalls = List(4) { index ->
-                async {
-                    petFinderRepository.getAnimals(
-                        animalType = _animalType.value,
-                        page = (index + 1)
-                    )
-                }
-            }
-            val animalList: List<Animal> = getAnimalAsyncCalls
-                .awaitAll()
-                .flatten()
-            _animalList.value = animalList
-        }
     }
 }
