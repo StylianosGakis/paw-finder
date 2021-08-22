@@ -19,7 +19,9 @@ import androidx.navigation.NavHostController
 
 class NavigationActions(navController: NavHostController) {
     val goToDetailsScreen: (Int) -> Unit = { id ->
-        navController.navigate(Screen.DetailsScreen.createRoute(id))
+        if (navController.currentDestination?.route != Screen.DetailsScreen.route) {
+            navController.navigate(Screen.DetailsScreen.createRoute(id))
+        }
     }
 
     val upPress: () -> Unit = {
