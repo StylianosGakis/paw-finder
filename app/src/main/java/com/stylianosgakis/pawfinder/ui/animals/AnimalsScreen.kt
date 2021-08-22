@@ -15,7 +15,6 @@
  */
 package com.stylianosgakis.pawfinder.ui.animals
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,7 +32,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +40,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,7 +48,6 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.stylianosgakis.pawfinder.api.model.animal.Animal
 import com.stylianosgakis.pawfinder.components.AnimalCard
 import com.stylianosgakis.pawfinder.components.LoadingScreen
-import com.stylianosgakis.pawfinder.components.indicateRecompositions
 import com.stylianosgakis.pawfinder.data.AnimalType
 import com.stylianosgakis.pawfinder.theme.AppTheme
 import com.stylianosgakis.pawfinder.theme.bottomSheetShape
@@ -61,7 +57,6 @@ import com.stylianosgakis.pawfinder.util.isLastItemVisible
 import com.stylianosgakis.pawfinder.util.isScrollingForwards
 import com.stylianosgakis.pawfinder.util.previewAnimal
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun AnimalsScreen(actions: NavigationActions) {

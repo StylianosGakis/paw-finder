@@ -66,9 +66,7 @@ fun DetailsScreen() {
     }
 
     val viewModel: DetailsScreenViewModel = hiltViewModel()
-    val viewState: DetailsScreenViewState by viewModel.viewStateFlow.collectAsState(
-        DetailsScreenViewState.Loading
-    )
+    val viewState: DetailsScreenViewState by viewModel.viewStateFlow.collectAsState()
 
     DetailsScreen(viewState)
 }
