@@ -15,12 +15,12 @@
  */
 package com.stylianosgakis.pawfinder.di
 
-import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.stylianosgakis.pawfinder.session.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -42,9 +42,9 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideSessionManager(
-        @ApplicationContext context: Context,
+        preferencesDataStore: DataStore<Preferences>,
     ): SessionManager =
-        SessionManager(context)
+        SessionManager(preferencesDataStore)
 
     @Singleton
     @Provides
