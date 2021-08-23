@@ -15,11 +15,13 @@
  */
 package com.stylianosgakis.pawfinder.ui
 
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 
 class NavigationActions(navController: NavHostController) {
     val goToDetailsScreen: (Long) -> Unit = { id ->
-        if (navController.currentDestination?.route != Screen.DetailsScreen.route) {
+        if (navController.currentBackStackEntry?.lifecycleIsResumed() == true) {
             navController.navigate(Screen.DetailsScreen.createRoute(id))
         }
     }
@@ -28,3 +30,6 @@ class NavigationActions(navController: NavHostController) {
         navController.navigateUp()
     }
 }
+
+private fun NavBackStackEntry.lifecycleIsResumed() =
+    this.lifecycle.currentState == Lifecycle.State.RESUMED
