@@ -16,7 +16,6 @@
 package com.stylianosgakis.pawfinder.api.authenticator
 
 import com.stylianosgakis.pawfinder.data.authentication.TokenRepository
-import com.stylianosgakis.pawfinder.util.withAuthenticationToken
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -37,10 +36,10 @@ class TokenAuthenticator(
     ): Request? {
         return try {
             return runBlocking {
-                val token = tokenRepository.getToken()
+                val token: String? = tokenRepository.getToken()
                 return@runBlocking mutex.withLock {
-                    val newToken = tokenRepository.getToken()
-                    if (token != newToken) {
+                    val newToken: String? = tokenRepository.getToken()
+                    if (newToken != null && token != newToken) {
                         // It was refreshed, so go ahead and just make the call
                         return@withLock response.request.withAuthenticationToken(newToken)
                     }

@@ -22,14 +22,13 @@ class TokenRepositoryImpl(
     private val tokenApi: TokenApi,
     private val sessionManager: SessionManager,
 ) : TokenRepository {
-    override suspend fun getToken(): String {
-        val currentToken = sessionManager.getCurrentToken()
-        return currentToken
+    override suspend fun getToken(): String? {
+        return sessionManager.getCurrentToken()
     }
 
     override suspend fun refreshAndGetToken(): String {
         val refreshedToken = tokenApi.getToken().accessToken
         sessionManager.setToken(refreshedToken)
-        return getToken()
+        return refreshedToken
     }
 }

@@ -16,6 +16,6 @@
 package com.stylianosgakis.pawfinder.data.authentication
 
 interface TokenRepository {
-    suspend fun getToken(): String
+    suspend fun getToken(): String?
     suspend fun refreshAndGetToken(): String
 }
