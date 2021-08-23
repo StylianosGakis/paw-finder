@@ -51,8 +51,7 @@ fun PhotoSection(
         modifier = modifier.fillMaxWidth()
     ) {
         CoilImage(
-            // todo don't pass empty string
-            imageModel = animal.photos.getOrNull(selectedImageIndex)?.full ?: "",
+            imageModel = animal.photos[selectedImageIndex].full,
             contentDescription = "${animal.description}",
             contentScale = ContentScale.FillBounds,
             loading = { LoadingImage() },

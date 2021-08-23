@@ -71,10 +71,6 @@ fun DetailsScreen() {
     DetailsScreen(viewState)
 }
 
-/**
- * TODO: Pass [DetailsScreenViewState] to the [DetailsScreen] instead of [Animal] and load
- *  placeholders in place of the full-screen ugly loading circle
- */
 @Composable
 private fun DetailsScreen(detailsScreenViewState: DetailsScreenViewState) {
     when (detailsScreenViewState) {
