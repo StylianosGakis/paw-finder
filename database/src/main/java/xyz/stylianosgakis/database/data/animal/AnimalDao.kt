@@ -21,8 +21,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import xyz.stylianosgakis.database.data.animal.model.AnimalEntity
-import xyz.stylianosgakis.database.data.animal.model.relations.AnimalWithPhotos
 import xyz.stylianosgakis.database.data.animal.model.PhotoEntity
+import xyz.stylianosgakis.database.data.animal.model.relations.AnimalWithPhotos
 
 @Dao
 interface AnimalDao {

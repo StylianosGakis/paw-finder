@@ -20,13 +20,13 @@ import androidx.compose.ui.text.toLowerCase
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import xyz.stylianosgakis.database.data.animal.model.AnimalEntity
-import xyz.stylianosgakis.database.data.animal.model.relations.AnimalWithPhotos
 import xyz.stylianosgakis.database.data.animal.model.AttributesEntity
 import xyz.stylianosgakis.database.data.animal.model.BreedsEntity
 import xyz.stylianosgakis.database.data.animal.model.ContactEntity
 import xyz.stylianosgakis.database.data.animal.model.LinksEntity
 import xyz.stylianosgakis.database.data.animal.model.PhotoEntity
 import xyz.stylianosgakis.database.data.animal.model.PrimaryPhotoCroppedEntity
+import xyz.stylianosgakis.database.data.animal.model.relations.AnimalWithPhotos
 
 @Serializable
 data class Animal(
