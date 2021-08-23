@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.api.model.animal
+package xyz.stylianosgakis.database.data.animal.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class Breeds(
-    val mixed: Boolean,
-    val primary: String,
-    val secondary: String?,
-    val unknown: Boolean,
+data class AttributesEntity(
+    val declawed: Boolean?,
+    val houseTrained: Boolean,
+    val shotsCurrent: Boolean,
+    val spayedNeutered: Boolean,
+    val specialNeeds: Boolean,
 )

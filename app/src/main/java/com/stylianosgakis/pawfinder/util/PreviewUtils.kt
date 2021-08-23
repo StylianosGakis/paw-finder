@@ -15,8 +15,8 @@
  */
 package com.stylianosgakis.pawfinder.util
 
-import com.stylianosgakis.pawfinder.api.model.animal.Animal
-import com.stylianosgakis.pawfinder.api.model.animal.GetOneAnimalResponse
+import com.stylianosgakis.pawfinder.api.animal.model.Animal
+import com.stylianosgakis.pawfinder.api.animal.response.GetOneAnimalResponse
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 

@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.ui
+package xyz.stylianosgakis.database.data.animal.model
 
-sealed class Screen(
-    val route: String,
-) {
-    object AnimalsScreen : Screen("animals")
-
-    object DetailsScreen : Screen("details/{id}") {
-        fun createRoute(id: Long): String = "details/$id"
-    }
-}
+data class BreedsEntity(
+    val mixed: Boolean,
+    val primary: String,
+    val secondary: String?,
+    val unknown: Boolean,
+)

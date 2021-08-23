@@ -17,7 +17,7 @@ package com.stylianosgakis.pawfinder.ui.animals
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.stylianosgakis.pawfinder.api.model.animal.Animal
+import com.stylianosgakis.pawfinder.api.animal.model.Animal
 import com.stylianosgakis.pawfinder.data.AnimalType
 import com.stylianosgakis.pawfinder.data.PetFinderRepository
 import com.stylianosgakis.pawfinder.di.DefaultDispatcher

@@ -16,7 +16,7 @@
 package com.stylianosgakis.pawfinder.ui.animaldetails
 
 import androidx.compose.runtime.Immutable
-import com.stylianosgakis.pawfinder.api.model.animal.Animal
+import com.stylianosgakis.pawfinder.api.animal.model.Animal
 
 @Immutable
 sealed class DetailsScreenViewState {

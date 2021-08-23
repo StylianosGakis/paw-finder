@@ -34,8 +34,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.coil.CoilImage
-import com.stylianosgakis.pawfinder.api.model.animal.Animal
-import com.stylianosgakis.pawfinder.api.model.animal.Photo
+import com.stylianosgakis.pawfinder.api.animal.model.Animal
+import com.stylianosgakis.pawfinder.api.animal.model.Photo
 import com.stylianosgakis.pawfinder.components.LoadingImage
 import com.stylianosgakis.pawfinder.theme.AppTheme
 import com.stylianosgakis.pawfinder.util.previewAnimal
@@ -51,7 +51,8 @@ fun PhotoSection(
         modifier = modifier.fillMaxWidth()
     ) {
         CoilImage(
-            imageModel = animal.photos[selectedImageIndex].full,
+            // todo don't pass empty string
+            imageModel = animal.photos.getOrNull(selectedImageIndex)?.full ?: "",
             contentDescription = "${animal.description}",
             contentScale = ContentScale.FillBounds,
             loading = { LoadingImage() },

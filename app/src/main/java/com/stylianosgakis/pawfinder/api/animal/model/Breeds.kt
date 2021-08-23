@@ -13,27 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.api.model.token
+package com.stylianosgakis.pawfinder.api.animal.model
 
-import com.stylianosgakis.pawfinder.BuildConfig
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class TokenRequest private constructor(
-    @SerialName("grant_type")
-    val grantType: String,
-    @SerialName("client_id")
-    val clientId: String,
-    @SerialName("client_secret")
-    val clientSecret: String,
-) {
-    companion object {
-        fun create(): TokenRequest =
-            TokenRequest(
-                grantType = "client_credentials",
-                clientId = BuildConfig.PET_FINDER_CLIENT_ID,
-                clientSecret = BuildConfig.PET_FINDER_CLIENT_SECRET,
-            )
-    }
-}
+data class Breeds(
+    val mixed: Boolean,
+    val primary: String,
+    val secondary: String?,
+    val unknown: Boolean,
+)

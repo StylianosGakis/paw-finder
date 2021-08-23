@@ -75,7 +75,7 @@ private fun NavGraphBuilder.addAnimalDetailScreen() {
         route = Screen.DetailsScreen.route,
         arguments = listOf(
             navArgument("id") {
-                type = NavType.IntType
+                type = NavType.LongType
             }
         ),
         enterTransition = { initial, _ ->

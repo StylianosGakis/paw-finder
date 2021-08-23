@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.ui
+package com.stylianosgakis.pawfinder.api.animal.model
 
-sealed class Screen(
-    val route: String,
-) {
-    object AnimalsScreen : Screen("animals")
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-    object DetailsScreen : Screen("details/{id}") {
-        fun createRoute(id: Long): String = "details/$id"
-    }
-}
+@Serializable
+data class Attributes(
+    val declawed: Boolean?,
+    @SerialName("house_trained")
+    val houseTrained: Boolean,
+    @SerialName("shots_current")
+    val shotsCurrent: Boolean,
+    @SerialName("spayed_neutered")
+    val spayedNeutered: Boolean,
+    @SerialName("special_needs")
+    val specialNeeds: Boolean,
+)

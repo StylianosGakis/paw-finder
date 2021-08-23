@@ -13,28 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.api.model.animal
+package com.stylianosgakis.pawfinder.api.animal.model
 
 import kotlinx.serialization.Serializable
+import xyz.stylianosgakis.database.data.animal.model.PhotoEntity
 
 @Serializable
-data class Links(
-    val organization: Organization,
-    val self: Self,
-    val type: Type,
-) {
-    @Serializable
-    data class Organization(
-        val href: String,
-    )
+data class Photo(
+    val full: String,
+    val large: String,
+    val medium: String,
+    val small: String,
+)
 
-    @Serializable
-    data class Self(
-        val href: String,
-    )
+fun PhotoEntity.toPhotos(): Photo = Photo(
+    full = full,
+    large = large,
+    medium = medium,
+    small = small,
+)
 
-    @Serializable
-    data class Type(
-        val href: String,
-    )
-}
+fun Photo.toEntity(
+    animalId: Long
+): PhotoEntity = PhotoEntity(
+    animalId = animalId,
+    full = full,
+    large = large,
+    medium = medium,
+    small = small,
+)

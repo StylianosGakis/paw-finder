@@ -16,23 +16,31 @@
 package com.stylianosgakis.pawfinder.data
 
 import com.stylianosgakis.pawfinder.api.PetFinderApi
-import com.stylianosgakis.pawfinder.api.model.animal.Animal
+import com.stylianosgakis.pawfinder.api.animal.model.Animal
+import com.stylianosgakis.pawfinder.api.animal.model.getAnimalEntity
+import com.stylianosgakis.pawfinder.api.animal.model.getPhotoEntityList
+import com.stylianosgakis.pawfinder.api.animal.model.toAnimal
 import com.stylianosgakis.pawfinder.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import xyz.stylianosgakis.database.data.animal.AnimalDao
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PetFinderRepository @Inject constructor(
     private val petFinderApi: PetFinderApi,
+    private val animalDao: AnimalDao,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     suspend fun getAnimals(
         animalType: AnimalType,
         page: Int,
     ): List<Animal> = withContext(ioDispatcher) {
-        return@withContext petFinderApi.searchAnimals(
+        val animals: List<Animal> = petFinderApi.fetchAnimals(
             animalType.type,
             page
         ).animals
@@ -44,15 +52,37 @@ class PetFinderRepository @Inject constructor(
                 )
             }
             // Filter only ones with multiple pictures to showcase feature in details screen
-            .filter {
-                it.photos.size > 1
+            .filter { animal ->
+                animal.photos.size > 1
             }
             .sortedByDescending { animal -> animal.id }
+        insertAnimalsToDatabase(animals)
+        animals
     }
 
     suspend fun getAnimal(
-        id: Int
+        id: Long
     ): Animal = withContext(ioDispatcher) {
-        petFinderApi.searchAnimal(id).animal
+        val databaseAnimal: Animal? = animalDao.get(id).firstOrNull()?.toAnimal()
+        if (databaseAnimal == null) {
+            val backendAnimal: Animal = petFinderApi.fetchAnimal(id).animal
+            insertAnimalsToDatabase(listOf(backendAnimal))
+            backendAnimal
+        } else {
+            databaseAnimal
+        }
+    }
+
+    private suspend fun insertAnimalsToDatabase(animals: List<Animal>) {
+        coroutineScope {
+            animals.map { animal: Animal ->
+                val asyncWork = async {
+                    val id = animalDao.insertAnimalEntity(animal.getAnimalEntity())
+                    animalDao.insertPhotoEntity(animal.getPhotoEntityList(id))
+                }
+                asyncWork.start()
+                asyncWork
+            }.awaitAll()
+        }
     }
 }

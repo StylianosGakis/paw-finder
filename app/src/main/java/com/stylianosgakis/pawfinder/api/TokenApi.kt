@@ -15,8 +15,8 @@
  */
 package com.stylianosgakis.pawfinder.api
 
-import com.stylianosgakis.pawfinder.api.model.token.TokenRequest
-import com.stylianosgakis.pawfinder.api.model.token.TokenResponse
+import com.stylianosgakis.pawfinder.api.token.TokenRequest
+import com.stylianosgakis.pawfinder.api.token.TokenResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 

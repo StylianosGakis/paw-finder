@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.ui
+package xyz.stylianosgakis.database.data.animal.model.relations
 
-sealed class Screen(
-    val route: String,
-) {
-    object AnimalsScreen : Screen("animals")
+import androidx.room.Embedded
+import androidx.room.Relation
+import xyz.stylianosgakis.database.data.animal.model.AnimalEntity
+import xyz.stylianosgakis.database.data.animal.model.PhotoEntity
 
-    object DetailsScreen : Screen("details/{id}") {
-        fun createRoute(id: Long): String = "details/$id"
-    }
-}
+data class AnimalWithPhotos(
+    @Embedded val animalEntity: AnimalEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "animal_id",
+    )
+    val photos: List<PhotoEntity>
+)

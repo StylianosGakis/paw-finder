@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.api.model.animal
+package com.stylianosgakis.pawfinder.api.animal.model
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Contact(
-    val address: Address,
-    val email: String?,
-    val phone: String?,
-) {
-    @Serializable
-    data class Address(
-        @SerialName("address1")
-        val address: String?,
-        val city: String,
-        val country: String,
-        val postcode: String?,
-        val state: String,
-    )
-}
+data class PrimaryPhotoCropped(
+    val full: String,
+    val large: String,
+    val medium: String,
+    val small: String,
+)

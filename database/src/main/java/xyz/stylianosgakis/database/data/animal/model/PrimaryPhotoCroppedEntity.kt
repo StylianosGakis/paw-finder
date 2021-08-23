@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.api.model.token
+package xyz.stylianosgakis.database.data.animal.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class TokenResponse(
-    @SerialName("token_type")
-    val tokenType: String,
-    @SerialName("expires_in")
-    val expiresIn: Int,
-    @SerialName("access_token")
-    val accessToken: String,
+data class PrimaryPhotoCroppedEntity(
+    val full: String,
+    val large: String,
+    val medium: String,
+    val small: String,
 )

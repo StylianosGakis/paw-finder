@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.api.model.animal
+package xyz.stylianosgakis.database.data
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import xyz.stylianosgakis.database.data.animal.AnimalDao
+import xyz.stylianosgakis.database.data.animal.model.AnimalEntity
+import xyz.stylianosgakis.database.data.animal.model.PhotoEntity
 
-@Serializable
-data class Attributes(
-    val declawed: Boolean?,
-    @SerialName("house_trained")
-    val houseTrained: Boolean,
-    @SerialName("shots_current")
-    val shotsCurrent: Boolean,
-    @SerialName("spayed_neutered")
-    val spayedNeutered: Boolean,
-    @SerialName("special_needs")
-    val specialNeeds: Boolean,
+@Database(
+    entities = [
+        AnimalEntity::class,
+        PhotoEntity::class,
+    ],
+    version = 1,
+    exportSchema = false // See if I want to export the Schema
 )
+abstract class PawFinderDatabase : RoomDatabase() {
+    abstract fun animalDao(): AnimalDao
+}

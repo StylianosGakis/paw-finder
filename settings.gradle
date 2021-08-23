@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "paw-finder"
 include ':app'
+include ':database'

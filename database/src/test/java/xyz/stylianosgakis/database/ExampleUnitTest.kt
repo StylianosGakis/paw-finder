@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.api.model.animal
+package xyz.stylianosgakis.database
 
-import kotlinx.serialization.Serializable
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
-@Serializable
-data class PrimaryPhotoCropped(
-    val full: String,
-    val large: String,
-    val medium: String,
-    val small: String,
-)
+/**
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
+ */
+class ExampleUnitTest {
+    @Test
+    fun addition_isCorrect() {
+        assertEquals(4, 2 + 2L)
+    }
+}

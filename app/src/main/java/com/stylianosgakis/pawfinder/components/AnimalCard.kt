@@ -41,7 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.coil.CoilImage
-import com.stylianosgakis.pawfinder.api.model.animal.Animal
+import com.stylianosgakis.pawfinder.api.animal.model.Animal
 import com.stylianosgakis.pawfinder.theme.AppTheme
 import com.stylianosgakis.pawfinder.theme.animalCardBackgroundColor
 import com.stylianosgakis.pawfinder.util.previewAnimal

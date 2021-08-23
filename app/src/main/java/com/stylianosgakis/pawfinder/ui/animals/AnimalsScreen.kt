@@ -47,7 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.insets.navigationBarsPadding
-import com.stylianosgakis.pawfinder.api.model.animal.Animal
+import com.stylianosgakis.pawfinder.api.animal.model.Animal
 import com.stylianosgakis.pawfinder.components.AnimalCard
 import com.stylianosgakis.pawfinder.components.LoadingScreen
 import com.stylianosgakis.pawfinder.data.AnimalType
@@ -73,7 +73,7 @@ fun AnimalsScreen(actions: NavigationActions) {
         setSelectedAnimalType = { animalType ->
             viewModel.setAnimalType(animalType)
         },
-        goToDetailsScreen = { animalId: Int ->
+        goToDetailsScreen = { animalId: Long ->
             actions.goToDetailsScreen(animalId)
         },
     )
@@ -85,7 +85,7 @@ private fun AnimalsScreen(
     animalList: List<Animal>,
     selectedAnimalType: AnimalType,
     setSelectedAnimalType: (AnimalType) -> Unit,
-    goToDetailsScreen: (id: Int) -> Unit,
+    goToDetailsScreen: (id: Long) -> Unit,
 ) {
     val composableCoroutineScope = rememberCoroutineScope()
 

@@ -13,14 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.ui
+package xyz.stylianosgakis.database.data.animal.model
 
-sealed class Screen(
-    val route: String,
+import androidx.room.Embedded
+
+data class LinksEntity(
+    @Embedded(prefix = "organization_") val organizationEntity: OrganizationEntity,
+    @Embedded(prefix = "self_") val selfEntity: SelfEntity,
+    @Embedded(prefix = "type_") val typeEntity: TypeEntity,
 ) {
-    object AnimalsScreen : Screen("animals")
+    data class OrganizationEntity(
+        val href: String,
+    )
 
-    object DetailsScreen : Screen("details/{id}") {
-        fun createRoute(id: Long): String = "details/$id"
-    }
+    data class SelfEntity(
+        val href: String,
+    )
+
+    data class TypeEntity(
+        val href: String,
+    )
 }

@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stylianosgakis.pawfinder.ui
+package com.stylianosgakis.pawfinder.api.token
 
-sealed class Screen(
-    val route: String,
-) {
-    object AnimalsScreen : Screen("animals")
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-    object DetailsScreen : Screen("details/{id}") {
-        fun createRoute(id: Long): String = "details/$id"
-    }
-}
+@Serializable
+data class TokenResponse(
+    @SerialName("token_type")
+    val tokenType: String,
+    @SerialName("expires_in")
+    val expiresIn: Int,
+    @SerialName("access_token")
+    val accessToken: String,
+)

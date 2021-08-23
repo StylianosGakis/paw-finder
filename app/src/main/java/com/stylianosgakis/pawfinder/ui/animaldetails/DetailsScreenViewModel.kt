@@ -37,10 +37,10 @@ class DetailsScreenViewModel @Inject constructor(
     private val petFinderRepository: PetFinderRepository,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
-    private val animalIdFlow: Flow<Int> = savedStateHandle.getLiveData<Int>("id").asFlow()
+    private val animalIdFlow: Flow<Long> = savedStateHandle.getLiveData<Long>("id").asFlow()
 
     val viewStateFlow: StateFlow<DetailsScreenViewState> = animalIdFlow
-        .map { animalId: Int ->
+        .map { animalId: Long ->
             val animal = petFinderRepository.getAnimal(animalId)
             DetailsScreenViewState.Loaded(animal)
         }

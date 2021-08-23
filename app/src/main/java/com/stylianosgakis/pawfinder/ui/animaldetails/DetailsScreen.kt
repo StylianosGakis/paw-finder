@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.stylianosgakis.pawfinder.api.model.animal.Animal
+import com.stylianosgakis.pawfinder.api.animal.model.Animal
 import com.stylianosgakis.pawfinder.components.ExtendedFab
 import com.stylianosgakis.pawfinder.components.LoadingScreen
 import com.stylianosgakis.pawfinder.theme.AppTheme

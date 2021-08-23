@@ -18,7 +18,7 @@ package com.stylianosgakis.pawfinder.ui
 import androidx.navigation.NavHostController
 
 class NavigationActions(navController: NavHostController) {
-    val goToDetailsScreen: (Int) -> Unit = { id ->
+    val goToDetailsScreen: (Long) -> Unit = { id ->
         if (navController.currentDestination?.route != Screen.DetailsScreen.route) {
             navController.navigate(Screen.DetailsScreen.createRoute(id))
         }
