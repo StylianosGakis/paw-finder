@@ -55,8 +55,8 @@ import com.stylianosgakis.pawfinder.theme.AppTheme
 import com.stylianosgakis.pawfinder.theme.bottomSheetShape
 import com.stylianosgakis.pawfinder.ui.FindMyPetAppBar
 import com.stylianosgakis.pawfinder.ui.NavigationActions
-import com.stylianosgakis.pawfinder.util.isLastItemVisible
-import com.stylianosgakis.pawfinder.util.isScrollingForwards
+import com.stylianosgakis.pawfinder.util.isLastItemVisibleAsState
+import com.stylianosgakis.pawfinder.util.isScrollingForwardsAsState
 import com.stylianosgakis.pawfinder.util.previewAnimal
 import kotlinx.coroutines.launch
 
@@ -90,8 +90,8 @@ private fun AnimalsScreen(
     val composableCoroutineScope = rememberCoroutineScope()
 
     val lazyListState: LazyListState = rememberLazyListState()
-    val isScrollingForwards = lazyListState.isScrollingForwards()
-    val isLastItemVisible = lazyListState.isLastItemVisible()
+    val isScrollingForwards = lazyListState.isScrollingForwardsAsState()
+    val isLastItemVisible = lazyListState.isLastItemVisibleAsState()
 
     Scaffold(
         topBar = { FindMyPetAppBar() },
@@ -153,7 +153,11 @@ private fun AnimalsScreen(
 
                 val shouldFilterButtonShow by derivedStateOf {
                     !modalSheetState.isVisible &&
-                        (animalList.isEmpty() || isScrollingForwards || isLastItemVisible)
+                        (
+                            animalList.isEmpty() ||
+                                isScrollingForwards.value ||
+                                isLastItemVisible.value
+                            )
                 }
                 FilterAnimalTypeButton(
                     onClick = {

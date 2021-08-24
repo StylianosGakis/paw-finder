@@ -63,7 +63,9 @@ object AuthenticationModule {
     ): Retrofit =
         Retrofit.Builder()
             .baseUrl(baseApiUrl)
-            .addConverterFactory(jsonSerializer.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(
+                jsonSerializer.asConverterFactory("application/json".toMediaType())
+            )
             .client(client)
             .build()
 

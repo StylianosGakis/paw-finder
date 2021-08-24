@@ -17,8 +17,10 @@ package com.stylianosgakis.pawfinder.util
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 
@@ -28,11 +30,11 @@ private class ScrollInfo(
 )
 
 @Composable
-fun LazyListState.isScrollingForwards(): Boolean {
+fun LazyListState.isScrollingForwardsAsState(): State<Boolean> {
     val oldScrollInfo = remember(this) { ScrollInfo() }
     val scrollOffset by rememberUpdatedState(firstVisibleItemScrollOffset)
     val index by rememberUpdatedState(firstVisibleItemIndex)
-    val isScrollingForwards by remember(this) {
+    return remember(this) {
         derivedStateOf {
             val isForward = when {
                 oldScrollInfo.index != index -> oldScrollInfo.index < index
@@ -43,15 +45,13 @@ fun LazyListState.isScrollingForwards(): Boolean {
             return@derivedStateOf isForward
         }
     }
-    return isScrollingForwards
 }
 
 @Composable
-fun LazyListState.isLastItemVisible(): Boolean {
-    val isLastItemVisible by remember {
+fun LazyListState.isLastItemVisibleAsState(): State<Boolean> {
+    return remember {
         derivedStateOf {
             layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
         }
     }
-    return isLastItemVisible
 }
