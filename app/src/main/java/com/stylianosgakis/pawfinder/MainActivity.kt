@@ -69,7 +69,6 @@ fun ColoredSystemBarsContent(content: @Composable () -> Unit) {
     val useDarkIcons = MaterialTheme.colors.isLight
     val primaryColor = MaterialTheme.colors.primary
     SideEffect {
-        Timber.d("Side effect ran")
         systemUiController.setSystemBarsColor(
             color = Color.Transparent,
             darkIcons = useDarkIcons
