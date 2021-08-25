@@ -31,7 +31,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.stylianosgakis.pawfinder.theme.AppTheme
 import com.stylianosgakis.pawfinder.ui.AppScreen
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
